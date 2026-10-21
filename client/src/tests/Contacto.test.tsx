@@ -64,6 +64,21 @@ describe('formulario de contacto', () => {
     expect(await screen.findByText('Ese correo no existe')).toBeInTheDocument();
   });
 
+  it('los errores de campos que no se ven (general, sitioWeb) caen en el mensaje general', async () => {
+    vi.mocked(enviarContacto).mockResolvedValue({
+      ok: false,
+      errores: { general: 'Algo raro pasó', sitioWeb: 'Campo trampa', correo: 'Ese correo no existe' },
+    });
+    render(<Contacto cotizacion={null} />);
+
+    const usuario = await llenarFormulario();
+    await usuario.click(screen.getByRole('button', { name: /Enviar/ }));
+
+    expect(await screen.findByText('Ese correo no existe')).toBeInTheDocument();
+    expect(screen.getByText('Revisa los campos marcados.')).toBeInTheDocument();
+    expect(screen.queryByText('Campo trampa')).not.toBeInTheDocument();
+  });
+
   it('cuenta los caracteres del motivo', async () => {
     render(<Contacto cotizacion={null} />);
     await userEvent.type(screen.getByLabelText('Motivo'), 'Hola');
