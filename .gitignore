@@ -1,0 +1,9 @@
+# Basurita de macOS
+.DS_Store
+
+# Dependencias, builds y secretos (por si acaso, aunque client y server ya los ignoran)
+node_modules
+dist
+.env
+.env.*
+!.env.example
