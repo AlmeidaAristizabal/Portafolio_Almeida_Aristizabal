@@ -2,7 +2,7 @@ import type { DatosContacto } from '../schemas/contacto';
 
 export type RespuestaContacto =
   | { ok: true; mensaje: string }
-  | { ok: false; mensaje?: string; errores?: Partial<Record<keyof DatosContacto, string>> };
+  | { ok: false; mensaje?: string; errores?: Partial<Record<keyof DatosContacto | 'general', string>> };
 
 const URL_API = import.meta.env.VITE_URL_API ?? '';
 const LIMITE_MS = 10_000;

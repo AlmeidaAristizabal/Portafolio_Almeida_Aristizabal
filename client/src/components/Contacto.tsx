@@ -13,6 +13,10 @@ import type { CotizacionElegida } from './Cotizador';
 
 type Estado = { tipo: 'quieto' } | { tipo: 'exito' | 'error'; mensaje: string };
 
+const CAMPOS_VISIBLES = ['proyecto', 'nombre', 'correo', 'celular', 'motivo'] as const;
+const esCampoVisible = (campo: string): campo is (typeof CAMPOS_VISIBLES)[number] =>
+  (CAMPOS_VISIBLES as readonly string[]).includes(campo);
+
 export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null }) {
   const movimientoReducido = useMovimientoReducido();
   const [estado, setEstado] = useState<Estado>({ tipo: 'quieto' });
@@ -63,9 +67,10 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
     const respuesta = await enviarContacto(datos);
 
     if (!respuesta.ok) {
-      // Si el servidor dice qué campo falló, lo pintamos debajo de ese campo
+      // Si el servidor dice qué campo falló, lo pintamos debajo de ese campo.
+      // Los que no se ven en el formulario (general, sitioWeb) se quedan con el mensaje de abajo
       for (const [campo, mensaje] of Object.entries(respuesta.errores ?? {})) {
-        setError(campo as keyof DatosContacto, { message: mensaje });
+        if (esCampoVisible(campo)) setError(campo, { message: mensaje });
       }
       setEstado({ tipo: 'error', mensaje: respuesta.mensaje ?? 'Revisa los campos marcados.' });
       return;
