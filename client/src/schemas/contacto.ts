@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 export const MAX_MOTIVO = 600;
 
-// Mismas reglas que server/src/models/MensajeContacto.ts: si cambian una, cambien la otra
+// Mismas reglas que server/src/models/MensajeContacto.ts: si cambian una, cambien la otra.
+// Ojo: TipoContacto (data/cotizador.ts) sale de aquí, así que el enum de proyecto manda
 export const esquemaContacto = z.object({
   // Escoger el tipo de proyecto ayuda, pero no es obligatorio (así está en el v9)
   // (nullish porque un grupo de radios sin marcar llega como null)
