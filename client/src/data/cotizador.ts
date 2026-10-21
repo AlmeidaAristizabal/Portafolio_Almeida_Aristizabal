@@ -1,10 +1,13 @@
+import type { DatosContacto } from '../schemas/contacto';
+
 // ⚠️ Valores de referencia del v9: ajústenlos a su tarifa real
 export const TARIFA_USD_HORA: [number, number] = [35, 45];
 export const COP_POR_USD = 3210;
 export const FECHA_TASA = '6 oct. 2026';
 export const HORAS_POR_SEMANA = 30;
 
-export type TipoContacto = 'pagina-web' | 'landing' | 'app-movil' | 'otro';
+// Sale del esquema del formulario: si agregan un tipo allá, aquí llega solito
+export type TipoContacto = NonNullable<DatosContacto['proyecto']>;
 
 export interface TipoCotizador {
   id: string;
