@@ -78,13 +78,13 @@ export function Servicios() {
                     </span>
                     <span>
                       <span className="block font-titulo text-[1.55rem] leading-tight tracking-[0.02em] uppercase">{s.titulo}</span>
-                      <span className="block text-[0.92rem] text-[var(--fg-muted)]">{s.subtitulo}</span>
+                      <span className="block text-[0.92rem] text-(--fg-muted)">{s.subtitulo}</span>
                     </span>
                   </button>
                   <div className="servicio-mas" id={`mas-${s.id}`}>
                     <div className="min-h-0 overflow-hidden">
                       <div className="grid gap-3 pr-4 pb-5 pl-[calc(1.6rem+40px)] sm:pl-[calc(2rem+46px)]">
-                        <p className="m-0 text-[0.98rem] text-[var(--fg-muted)]">{s.descripcion}</p>
+                        <p className="m-0 text-[0.98rem] text-(--fg-muted)">{s.descripcion}</p>
                         <ul className="chequeos">
                           {s.incluye.map((item) => <li key={item}>{item}</li>)}
                         </ul>

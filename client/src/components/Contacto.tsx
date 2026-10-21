@@ -118,7 +118,7 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
                 {OPCIONES_PROYECTO.map((o) => (
                   <label key={o.id} className="chip-tipo relative">
                     <input type="radio" value={o.id} {...register('proyecto')} className="absolute inset-0 m-0 cursor-pointer opacity-0" />
-                    <span className="inline-flex items-center rounded-full border border-[var(--field-bd)] px-4 py-2 text-[0.93rem] font-semibold text-in-50">
+                    <span className="inline-flex items-center rounded-full border border-(--field-bd) px-4 py-2 text-[0.93rem] font-semibold text-in-50">
                       {o.texto}
                     </span>
                   </label>
@@ -159,7 +159,7 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
             {/* Siempre en el DOM: si la región viva nace con el texto adentro, el lector de pantalla ni se entera */}
             <p
               role={estado.tipo === 'error' ? 'alert' : 'status'}
-              className={estado.tipo === 'quieto' ? 'sr-only' : 'estado-form m-0 rounded-[10px] border border-[var(--line)] bg-[var(--dark-surface-2)] px-4 py-3 text-[0.95rem] text-in-50'}
+              className={estado.tipo === 'quieto' ? 'sr-only' : 'estado-form m-0 rounded-[10px] border border-(--line) bg-(--dark-surface-2) px-4 py-3 text-[0.95rem] text-in-50'}
             >
               {estado.tipo !== 'quieto' ? estado.mensaje : ''}
             </p>
@@ -246,7 +246,7 @@ function TarjetaCorreo({ ref }: { ref: React.Ref<HTMLDivElement> }) {
   return (
     <div
       ref={ref}
-      className="relative z-[3] grid w-auto gap-3.5 self-stretch rounded-2xl border border-[var(--dark-line)] bg-[var(--dark-surface)] px-5 py-5 backdrop-blur-[10px] min-[861px]:w-[min(100%,380px)] min-[861px]:self-end"
+      className="relative z-[3] grid w-auto gap-3.5 self-stretch rounded-2xl border border-(--dark-line) bg-(--dark-surface) px-5 py-5 backdrop-blur-[10px] min-[861px]:w-[min(100%,380px)] min-[861px]:self-end"
     >
       <p className="m-0 font-mono text-[0.76rem] text-in-100">¿Prefieres escribirnos directo?</p>
       <div className="flex flex-wrap items-center justify-between gap-2.5">

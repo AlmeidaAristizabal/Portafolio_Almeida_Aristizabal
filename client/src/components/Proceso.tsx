@@ -5,7 +5,7 @@ export function Proceso() {
   return (
     <section id="proceso" aria-labelledby="titulo-proceso">
       <div className="envoltura">
-        <div className="border-t border-[var(--light-hair)] py-[clamp(4rem,9vw,6.5rem)]">
+        <div className="border-t border-(--light-hair) py-[clamp(4rem,9vw,6.5rem)]">
           <div className="aparecer mb-[clamp(2rem,5vw,3.25rem)] max-w-[720px]">
             <p className="ceja">// proceso</p>
             <h2 id="titulo-proceso" className="titulo-seccion">De la idea a la <span className="text-verde">producción</span></h2>

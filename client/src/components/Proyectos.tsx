@@ -77,7 +77,7 @@ function TarjetaProyecto({ proyecto, modo }: { proyecto: Proyecto; modo: Modo })
           <span className="insignia">ejemplo</span>
         </div>
         <h3 className="m-0 font-titulo text-[1.9rem] leading-[1.05] font-bold tracking-[0.01em] text-white uppercase">{proyecto.titulo}</h3>
-        <p className="m-0 text-[var(--fg-muted)]">{proyecto.descripcion}</p>
+        <p className="m-0 text-(--fg-muted)">{proyecto.descripcion}</p>
         {modo === 'codigo' ? (
           <ul className="etiquetas mt-auto pt-1.5">
             {proyecto.stack.map((t) => <li key={t} className="etiqueta">{t}</li>)}
