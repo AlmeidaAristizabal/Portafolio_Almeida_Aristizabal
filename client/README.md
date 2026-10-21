@@ -1,32 +1,20 @@
-# React + TypeScript + Vite
+# client
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+La cara del portafolio de AJ: React 19 + TypeScript + Vite + Tailwind CSS v4.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # http://localhost:5173 (las llamadas a /api se van al server en el puerto 3001)
+npm test         # pruebas con Vitest
+npm run lint     # oxlint
+npm run build    # revisa los tipos y arma la carpeta dist/
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Dónde está cada cosa:
+
+- `src/components/`: las secciones de la página (Hero, Servicios, Cotizador, Contacto...).
+- `src/data/`: los textos, los proyectos y las tarifas del cotizador. Aquí se cambian los datos de relleno.
+- `src/schemas/contacto.ts`: las reglas del formulario. Deben coincidir con las de `server/src/models/MensajeContacto.ts`.
+- `src/efectos/`: las animaciones (la explosión del hero, la avioneta del envío).
+
+Cómo correr el proyecto completo: ver el [README de la raíz](../README.md).
