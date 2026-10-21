@@ -112,7 +112,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                 <button type="button" className="boton boton-verde w-full" onClick={enviar}>
                   {enviado ? 'Listo: completa tus datos abajo ↓' : 'Enviar esta cotización →'}
                 </button>
-                <button type="button" className="boton boton-fantasma w-full" onClick={() => setTipoId(TIPO_POR_DEFECTO)}>
+                <button type="button" className="boton boton-fantasma w-full" onClick={() => { setTipoId(TIPO_POR_DEFECTO); setMoneda('USD'); }}>
                   Reiniciar
                 </button>
               </div>
