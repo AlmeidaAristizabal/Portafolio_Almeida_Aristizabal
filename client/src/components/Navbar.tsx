@@ -17,7 +17,7 @@ export function Navbar({ temaAzul }: { temaAzul: boolean }) {
 
         <button
           type="button"
-          className="inline-flex size-11 items-center justify-center rounded-lg border border-[var(--dark-line)] text-white min-[861px]:hidden"
+          className="inline-flex size-11 items-center justify-center rounded-lg border border-(--dark-line) text-white min-[861px]:hidden"
           aria-expanded={menuAbierto}
           aria-controls="menu-principal"
           onClick={() => setMenuAbierto((abierto) => !abierto)}
@@ -30,14 +30,14 @@ export function Navbar({ temaAzul }: { temaAzul: boolean }) {
 
         <ul
           id="menu-principal"
-          className={`menu-movil ${menuAbierto ? 'flex' : 'hidden'} absolute inset-x-0 top-full flex-col border-b border-[var(--dark-hair)] bg-pu-600 px-[clamp(16px,4vw,40px)] pt-2 pb-4 transition-colors duration-700 min-[861px]:static min-[861px]:flex min-[861px]:flex-row min-[861px]:items-center min-[861px]:gap-8 min-[861px]:border-0 min-[861px]:bg-transparent min-[861px]:p-0`}
+          className={`menu-movil ${menuAbierto ? 'flex' : 'hidden'} absolute inset-x-0 top-full flex-col border-b border-(--dark-hair) bg-pu-600 px-[clamp(16px,4vw,40px)] pt-2 pb-4 transition-colors duration-700 min-[861px]:static min-[861px]:flex min-[861px]:flex-row min-[861px]:items-center min-[861px]:gap-8 min-[861px]:border-0 min-[861px]:bg-transparent min-[861px]:p-0`}
         >
           {ENLACES_NAV.map((enlace) => (
             <li key={enlace.id}>
               <a
                 href={`#${enlace.id}`}
                 onClick={cerrarMenu}
-                className="enlace-nav block border-b border-[var(--dark-hair)] py-3 text-[1.05rem] font-semibold text-in-100 no-underline hover:text-white min-[861px]:border-0 min-[861px]:py-0"
+                className="enlace-nav block border-b border-(--dark-hair) py-3 text-[1.05rem] font-semibold text-in-100 no-underline hover:text-white min-[861px]:border-0 min-[861px]:py-0"
               >
                 {enlace.texto}
               </a>

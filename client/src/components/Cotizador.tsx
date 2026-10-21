@@ -29,7 +29,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
   return (
     <section id="cotizador" aria-labelledby="titulo-cotizador">
       <div className="envoltura">
-        <div className="border-t border-[var(--light-hair)] py-[clamp(4rem,9vw,6.5rem)]">
+        <div className="border-t border-(--light-hair) py-[clamp(4rem,9vw,6.5rem)]">
           <div className="aparecer mb-[clamp(2rem,5vw,3rem)] grid grid-cols-1 items-end gap-x-[clamp(2rem,5vw,4rem)] gap-y-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             <div>
               <p className="ceja">// cotizador</p>
@@ -81,7 +81,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                 <p id="etiqueta-resumen" className="m-0 font-mono text-[0.74rem] tracking-[0.06em] text-pu-100 uppercase">
                   Inversión estimada · {moneda}
                 </p>
-                <div className="selector-moneda inline-flex rounded-full border border-[var(--dark-line)] bg-[var(--dark-surface-2)] p-[3px]" role="group" aria-label="Moneda">
+                <div className="selector-moneda inline-flex rounded-full border border-(--dark-line) bg-(--dark-surface-2) p-[3px]" role="group" aria-label="Moneda">
                   {(['USD', 'COP'] as const).map((m) => (
                     <button
                       key={m}
@@ -103,7 +103,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                 Entrega estimada: <strong className="text-white">{semanas}</strong>
               </p>
               <ul className="m-0 grid list-none p-0">
-                <li className="flex items-baseline justify-between gap-4 border-t border-[var(--dark-hair)] py-2 text-[0.92rem] text-in-100">
+                <li className="flex items-baseline justify-between gap-4 border-t border-(--dark-hair) py-2 text-[0.92rem] text-in-100">
                   <span>Proyecto</span>
                   <span className="font-mono text-[0.8rem] whitespace-nowrap text-white">{tipo.nombre}</span>
                 </li>
