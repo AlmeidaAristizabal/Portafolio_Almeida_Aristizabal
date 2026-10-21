@@ -1,0 +1,78 @@
+@import 'tailwindcss';
+/* En la capa "components" pa' que las utilidades de Tailwind (hidden, w-full…) le puedan ganar */
+@import './styles/efectos.css' layer(components);
+
+/* Fuentes del Figma, paleta del Figma (tal cual la usa el HTML v9) */
+@theme {
+  --font-titulo: 'Alumni Sans SC', 'Arial Narrow', sans-serif;
+  --font-texto: 'Anaheim', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* índigo */
+  --color-in-50: #efefff;
+  --color-in-100: #c7c8ff;
+  --color-in-200: #9a9cff;
+  --color-in-300: #6a6eff;
+  --color-in-400: #2e3aff;
+  --color-in-500: #0015c1;
+  --color-in-600: #00076b;
+  /* violeta */
+  --color-pu-50: #f2efff;
+  --color-pu-100: #d9ceff;
+  --color-pu-200: #b79eff;
+  --color-pu-300: #986bff;
+  --color-pu-400: #7d20ff;
+  --color-pu-500: #5600b8;
+  --color-pu-600: #2f006b;
+  /* azul */
+  --color-bl-50: #eaf1ff;
+  --color-bl-100: #b0cdff;
+  --color-bl-200: #5fa7ff;
+  --color-bl-300: #0082dd;
+  --color-bl-400: #005ea2;
+  --color-bl-500: #003c6b;
+  --color-bl-600: #001d38;
+  /* grises */
+  --color-gr-50: #f1f1f1;
+  --color-gr-100: #cbcbce;
+  --color-gr-200: #a4a4a9;
+  --color-gr-300: #7f7f86;
+  --color-gr-400: #5b5b64;
+  --color-gr-500: #3a3a41;
+  --color-gr-600: #1c1c20;
+  /* El verde de los acentos del Figma */
+  --color-verde: #40bb4e;
+}
+
+/* El mismo ancho que el .wrap del v9 */
+@utility envoltura {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 40px);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-bl-50 font-texto text-bl-600 antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+  section[id] {
+    scroll-margin-top: 76px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-bl-300);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
