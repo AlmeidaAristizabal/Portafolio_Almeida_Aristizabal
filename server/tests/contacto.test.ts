@@ -76,12 +76,14 @@ describe('POST /api/contacto', () => {
     expect(respuesta.body.errores).toHaveProperty('motivo');
   });
 
-  it('no deja pasar a los bots que llenan el campo trampa', async () => {
+  it('al bot que llena el campo trampa le dice que sí, pero no manda nada', async () => {
     const respuesta = await request(app)
       .post('/api/contacto')
       .send({ ...mensajeValido, sitioWeb: 'http://spam.com' });
 
-    expect(respuesta.status).toBe(400);
+    expect(respuesta.status).toBe(201);
+    expect(respuesta.body.ok).toBe(true);
+    expect(respuesta.body).not.toHaveProperty('errores');
     expect(enviarCorreoContacto).not.toHaveBeenCalled();
   });
 
