@@ -48,7 +48,7 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
       () => cambiarTemaRef.current(),
     );
     // Los refs son estables: solo nos importa si cambia la preferencia de movimiento
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps
   }, [movimientoReducido]);
 
   // El texto del rol cambia a mitad del glitch, no antes
