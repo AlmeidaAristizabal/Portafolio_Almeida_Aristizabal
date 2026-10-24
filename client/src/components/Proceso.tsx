@@ -37,7 +37,8 @@ export function Proceso() {
               })}
             </ol>
 
-            <figure className="camion-fig m-0 min-w-0 flex-[1_1_460px]">
+            {/* El left y no el translate: el translate ya lo usa la animación de entrada y se pelearían */}
+            <figure className="camion-fig relative m-0 min-w-0 flex-[1_1_460px] lg:-left-10">
               <CamionAJ etiqueta={t.proceso.camion} />
             </figure>
           </div>
