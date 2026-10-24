@@ -43,7 +43,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
           <div className="grid grid-cols-1 items-start gap-[clamp(1.25rem,3vw,2.25rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)]">
             <div className="grid min-w-0 gap-5 rounded-[18px] border border-in-100 bg-white p-[clamp(1.15rem,2.5vw,1.6rem)] shadow-[0_14px_30px_-24px_var(--card-shadow)]">
               <div className="flex items-center gap-3.5">
-                <span className="grid size-[30px] flex-none place-items-center rounded-full border border-in-100 font-mono text-[0.76rem] text-pu-500" aria-hidden>1</span>
+                <span className="grid size-7.5 flex-none place-items-center rounded-full border border-in-100 font-mono text-[0.76rem] text-pu-500" aria-hidden>1</span>
                 <h3 id="titulo-paso-1" className="m-0 font-titulo text-[1.7rem] leading-tight font-semibold tracking-[0.02em] text-in-600 uppercase">
                   ¿Qué necesitas construir?
                 </h3>
@@ -81,7 +81,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                 <p id="etiqueta-resumen" className="m-0 font-mono text-[0.74rem] tracking-[0.06em] text-pu-100 uppercase">
                   Inversión estimada · {moneda}
                 </p>
-                <div className="selector-moneda inline-flex rounded-full border border-(--dark-line) bg-(--dark-surface-2) p-[3px]" role="group" aria-label="Moneda">
+                <div className="selector-moneda inline-flex rounded-full border border-(--dark-line) bg-(--dark-surface-2) p-0.75" role="group" aria-label="Moneda">
                   {(['USD', 'COP'] as const).map((m) => (
                     <button
                       key={m}
