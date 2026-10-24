@@ -51,7 +51,7 @@ export function Nosotros() {
               <h3 className="mt-2 font-titulo text-[clamp(1.6rem,2.8vw,2rem)] leading-tight tracking-[0.03em] text-(--heading) uppercase">
                 {persona.nombre}
               </h3>
-              <p className="m-0 font-mono text-[0.78rem] text-(--eyebrow)">{persona.rol[idioma]}</p>
+              <p className="m-0 font-mono text-[1rem] text-(--eyebrow)">{persona.rol[idioma]}</p>
               <ul className="etiquetas justify-center" aria-label={t.nosotros.tecnologiasDe(persona.nombre.split(' ')[0])}>
                 {persona.tecnologias.map((t) => (
                   <li key={t} className="etiqueta">{t}</li>
