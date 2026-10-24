@@ -17,7 +17,7 @@ function Llanta({ cx }: { cx: number }) {
   );
 }
 
-export function CamionAJ({ etiqueta = 'Camión de AJ Express rumbo a producción' }: { etiqueta?: string }) {
+export function CamionAJ({ etiqueta }: { etiqueta: string }) {
   return (
     <svg className="aj-camion" viewBox="0 0 720 380" role="img" aria-label={etiqueta}>
       <line x1="0" y1="322" x2="720" y2="322" style={{ stroke: 'var(--color-in-100)', strokeWidth: 3, strokeLinecap: 'round' }} />

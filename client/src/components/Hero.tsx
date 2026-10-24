@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ORBITA_EXTERNA, ORBITA_INTERNA, TECNOLOGIAS_CINTA } from '../data/contenido';
 import { iniciarExplosionHero } from '../efectos/explosionHero';
+import { useIdioma } from '../hooks/useIdioma';
 import { useMovimientoReducido } from '../hooks/useMovimientoReducido';
-
-const ROLES = ['Full Stack Developers', 'Web · Móvil · APIs'];
 
 interface Props {
   temaAzul: boolean;
@@ -12,7 +11,9 @@ interface Props {
 
 export function Hero({ temaAzul, onCambiarTema }: Props) {
   const movimientoReducido = useMovimientoReducido();
-  const [rol, setRol] = useState(ROLES[0]);
+  const { t } = useIdioma();
+  // Guardamos cuál rol va (0 morado, 1 azul) y no el texto, pa' que cambie solito con el idioma
+  const [indiceRol, setIndiceRol] = useState(0);
 
   const refs = {
     hero: useRef<HTMLElement>(null),
@@ -34,6 +35,19 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
     cambiarTemaRef.current = onCambiarTema;
   }, [onCambiarTema]);
 
+  // Mismo truco con los letreros de estado: la explosión los pide cuando los necesita, ya en el idioma de turno
+  const estadosRef = useRef(t.hero.estados);
+  useEffect(() => {
+    estadosRef.current = t.hero.estados;
+  }, [t]);
+
+  // El letrero lo maneja la explosión a punta de textContent, así que React no le pone hijos: si cambia
+  // el idioma lo reescribimos a mano (y si estaba en plena animación, vuelve a "En línea", qué se le hace)
+  const { estadoTxt } = refs;
+  useLayoutEffect(() => {
+    if (estadoTxt.current) estadoTxt.current.textContent = t.hero.estados.enLinea;
+  }, [estadoTxt, t]);
+
   useEffect(() => {
     if (movimientoReducido) return;
     const { hero, orbita, nucleo, capa, lienzo, destello, estado, estadoTxt, rol, texto, cinta } = refs;
@@ -46,6 +60,7 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
         texto: texto.current, cinta: cinta.current,
       },
       () => cambiarTemaRef.current(),
+      () => estadosRef.current,
     );
     // Los refs son estables: solo nos importa si cambia la preferencia de movimiento
     // oxlint-disable-next-line react/exhaustive-deps
@@ -53,7 +68,7 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
 
   // El texto del rol cambia a mitad del glitch, no antes
   useEffect(() => {
-    const reloj = setTimeout(() => setRol(ROLES[temaAzul ? 1 : 0]), 200);
+    const reloj = setTimeout(() => setIndiceRol(temaAzul ? 1 : 0), 200);
     return () => clearTimeout(reloj);
   }, [temaAzul]);
 
@@ -63,7 +78,7 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
         <div ref={refs.texto} className="min-w-0">
           <h1 id="titulo-hero" className="m-0 font-normal">
             <span className="block font-titulo text-[clamp(1.9rem,3.6vw,2.9rem)] leading-[1.1] tracking-[0.07em] text-white uppercase">
-              Hola, somos
+              {t.hero.saludo}
             </span>
             <span className="nombres mt-2 block font-titulo text-[clamp(2.9rem,5.6vw,4.6rem)] leading-[1] tracking-[0.01em] uppercase">
               <span className="block">Juan Pablo Almeida</span>
@@ -71,20 +86,19 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
             </span>
           </h1>
           <p ref={refs.rol} className="rol mt-6 text-[clamp(.9rem,1.5vw,1.1rem)] font-semibold tracking-[0.28em] text-white uppercase sm:tracking-[0.42em]">
-            {rol}
+            {t.hero.roles[indiceRol]}
           </p>
           <p className="mt-4 max-w-[46ch] text-[1.1rem] text-pu-100">
-            Construimos aplicaciones web y móviles de punta a punta: base de datos, API e interfaz, con código claro y
-            entregas por etapas.
+            {t.hero.intro}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a className="boton boton-verde flex-auto border-white sm:flex-none" href="#contacto">Contáctanos</a>
-            <a className="boton boton-fantasma flex-auto sm:flex-none" href="#proyectos">Ver proyectos</a>
+            <a className="boton boton-verde flex-auto border-white sm:flex-none" href="#contacto">{t.hero.contactanos}</a>
+            <a className="boton boton-fantasma flex-auto sm:flex-none" href="#proyectos">{t.hero.verProyectos}</a>
           </div>
         </div>
 
         <div className="grid min-w-0 justify-items-center gap-3.5">
-          <figure ref={refs.orbita} className="orbita m-0 min-[960px]:w-[min(100%,470px)]" aria-label="Tecnologías con las que trabajamos">
+          <figure ref={refs.orbita} className="orbita m-0 min-[960px]:w-[min(100%,470px)]" aria-label={t.hero.orbita}>
             <div className="anillo anillo-externo" aria-hidden />
             <div className="anillo anillo-interno" aria-hidden />
             {movimientoReducido ? (
@@ -97,8 +111,8 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
                 ref={refs.nucleo as React.Ref<HTMLButtonElement>}
                 type="button"
                 className="nucleo"
-                aria-label="Ejecutar la animación del banner"
-                title="Haz clic para compilar"
+                aria-label={t.hero.ejecutar}
+                title={t.hero.pista}
               >
                 <span className="logo-aj" aria-hidden />
               </button>
@@ -120,7 +134,7 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
           </figure>
           <p ref={refs.estado} className="estado-orbita" aria-hidden>
             <span className="punto" />
-            <span ref={refs.estadoTxt} className="txt">En línea</span>
+            <span ref={refs.estadoTxt} className="txt" />
           </p>
         </div>
       </div>
@@ -130,7 +144,7 @@ export function Hero({ temaAzul, onCambiarTema }: Props) {
         <div ref={refs.destello} className="destello-fx" />
       </div>
 
-      <div ref={refs.cinta} className="cinta" aria-label="Stack tecnológico">
+      <div ref={refs.cinta} className="cinta" aria-label={t.hero.cinta}>
         <div className="cinta-pista">
           {/* Dos copias seguidas: cuando la primera se acaba, la segunda ya está en su puesto */}
           {[false, true].map((copia) => (

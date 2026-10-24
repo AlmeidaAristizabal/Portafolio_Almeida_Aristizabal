@@ -1,21 +1,21 @@
 import { CV_ELEIRA, CV_JUAN, PERSONAS } from '../data/contenido';
 import { FOTO_ELEIRA, FOTO_JUAN } from '../data/fotos';
 import { useAvisoTemporal } from '../hooks/useAvisoTemporal';
+import { useIdioma } from '../hooks/useIdioma';
 
 const FOTOS = [FOTO_JUAN, FOTO_ELEIRA];
 const FORMA_BLOB = 'M232 18C304 8 382 118 393 218c9 82-62 94-142 90-80-4-190 6-222-34C-6 230 40 162 110 102 160 58 190 24 232 18Z';
 
 export function Nosotros() {
+  const { idioma, t } = useIdioma();
   return (
     <section id="nosotros" aria-labelledby="titulo-nosotros" className="pt-[clamp(4rem,9vw,6.5rem)]">
       <div className="envoltura">
         <div className="aparecer mx-auto mb-[clamp(3.5rem,7vw,5rem)] max-w-[760px] text-center">
-          <p className="ceja">// nosotros</p>
-          <h2 id="titulo-nosotros" className="titulo-seccion">¿Quiénes somos?</h2>
+          <p className="ceja">{t.nosotros.ceja}</p>
+          <h2 id="titulo-nosotros" className="titulo-seccion">{t.nosotros.titulo}</h2>
           <p className="mx-auto mt-5 max-w-[64ch] text-[1.08rem]">
-            Somos un equipo de desarrolladores full stack apasionados por transformar ideas complejas en productos
-            digitales eficientes, escalables y atractivos. Combinamos la solidez del desarrollo backend con la
-            interactividad y el diseño del frontend para ofrecer soluciones tecnológicas de extremo a extremo.
+            {t.nosotros.intro}
           </p>
         </div>
 
@@ -51,8 +51,8 @@ export function Nosotros() {
               <h3 className="mt-2 font-titulo text-[clamp(1.6rem,2.8vw,2rem)] leading-tight tracking-[0.03em] text-(--heading) uppercase">
                 {persona.nombre}
               </h3>
-              <p className="m-0 font-mono text-[0.78rem] text-(--eyebrow)">{persona.rol}</p>
-              <ul className="etiquetas justify-center" aria-label={`Tecnologías de ${persona.nombre.split(' ')[0]}`}>
+              <p className="m-0 font-mono text-[0.78rem] text-(--eyebrow)">{persona.rol[idioma]}</p>
+              <ul className="etiquetas justify-center" aria-label={t.nosotros.tecnologiasDe(persona.nombre.split(' ')[0])}>
                 {persona.tecnologias.map((t) => (
                   <li key={t} className="etiqueta">{t}</li>
                 ))}
@@ -98,6 +98,7 @@ function FotoRecortada({ indice, nombre, src }: { indice: number; nombre: string
 }
 
 function BotonCv({ nombre, enlace, verde = false }: { nombre: string; enlace: string | null; verde?: boolean }) {
+  const { t } = useIdioma();
   const [avisando, avisar] = useAvisoTemporal(false, 2000);
   const clases = `boton-cv flex min-h-16 items-center justify-center gap-2.5 px-4 py-3 text-center text-[1.02rem] font-bold text-white no-underline transition-colors ${verde ? 'bg-verde hover:bg-[#4fcb5d]' : 'hover:bg-pu-400'}`;
   const contenido = (
@@ -106,7 +107,7 @@ function BotonCv({ nombre, enlace, verde = false }: { nombre: string; enlace: st
         <path d="M12 4v11" /><path d="m7 10 5 5 5-5" /><path d="M5 20h14" />
       </svg>
       <span aria-live="polite">
-        {avisando ? 'CV disponible pronto' : <><span className="hidden sm:inline">Descargar </span>CV · {nombre}</>}
+        {avisando ? t.nosotros.cvPronto : <><span className="hidden sm:inline">{t.nosotros.descargar}</span>CV · {nombre}</>}
       </span>
     </>
   );

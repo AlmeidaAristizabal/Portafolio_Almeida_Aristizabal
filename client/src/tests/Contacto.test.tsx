@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Contacto } from '../components/Contacto';
 import { enviarContacto } from '../services/contactoService';
 
@@ -41,6 +41,7 @@ describe('formulario de contacto', () => {
     expect(await screen.findByText(/Te respondemos pronto/)).toBeInTheDocument();
     expect(enviarContacto).toHaveBeenCalledWith(
       expect.objectContaining({ proyecto: 'landing', correo: 'juan@example.com', celular: '' }),
+      'es',
     );
   });
 
@@ -118,5 +119,42 @@ describe('formulario de contacto', () => {
     await usuario.click(screen.getByRole('button', { name: /Enviar/ }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('El servidor respondió raro (502).');
+  });
+
+  describe('en inglés', () => {
+    beforeEach(() => {
+      document.documentElement.lang = 'en';
+    });
+    afterEach(() => {
+      document.documentElement.lang = '';
+    });
+
+    it('los errores de validación salen en inglés', async () => {
+      render(<Contacto cotizacion={null} />);
+      await userEvent.click(screen.getByRole('button', { name: /Send/ }));
+
+      expect(await screen.findByText('Please enter your name.')).toBeInTheDocument();
+      expect(screen.getByText('Tell us a bit more about your project.')).toBeInTheDocument();
+    });
+
+    it('reconoce el mensaje del cotizador en inglés y lo cambia por la nueva cotización', async () => {
+      const { rerender } = render(<Contacto cotizacion={{ tipoContacto: 'landing', mensaje: "Hi, I'd like a quote for: Landing page." }} />);
+      rerender(<Contacto cotizacion={{ tipoContacto: 'app-movil', mensaje: "Hi, I'd like a quote for: Mobile app." }} />);
+
+      expect(screen.getByLabelText('Message')).toHaveValue("Hi, I'd like a quote for: Mobile app.");
+    });
+
+    it('le pasa el idioma al servicio pa’ que los avisos también lleguen en inglés', async () => {
+      vi.mocked(enviarContacto).mockResolvedValue({ ok: true, mensaje: "Done! We'll get back to you soon." });
+      render(<Contacto cotizacion={null} />);
+      const usuario = userEvent.setup();
+      await usuario.type(screen.getByLabelText('Name'), 'Juan Pablo Almeida');
+      await usuario.type(screen.getByLabelText('Email'), 'juan@example.com');
+      await usuario.type(screen.getByLabelText('Message'), 'I need a landing page for my business.');
+      await usuario.click(screen.getByRole('button', { name: /Send/ }));
+
+      expect(await screen.findByText(/get back to you soon/)).toBeInTheDocument();
+      expect(enviarContacto).toHaveBeenCalledWith(expect.objectContaining({ correo: 'juan@example.com' }), 'en');
+    });
   });
 });

@@ -2,23 +2,26 @@ import { useState } from 'react';
 import {
   CATEGORIAS_PROYECTO, NOMBRE_CATEGORIA, PROYECTOS, type CategoriaProyecto, type MaquetaProyecto, type Proyecto,
 } from '../data/contenido';
+import { useIdioma } from '../hooks/useIdioma';
 
 type Modo = 'codigo' | 'negocio';
 
 export function Proyectos() {
+  const { idioma, t } = useIdioma();
   const [filtro, setFiltro] = useState<CategoriaProyecto | 'todos'>('todos');
   const [modo, setModo] = useState<Modo>('codigo');
 
   const visibles = filtro === 'todos' ? PROYECTOS : PROYECTOS.filter((p) => p.categoria === filtro);
+  const explicacion = modo === 'codigo' ? t.proyectos.modoCodigo : t.proyectos.modoNegocio;
 
   return (
     <section id="proyectos" aria-labelledby="titulo-proyectos" className="py-[clamp(4rem,9vw,6.5rem)]">
       <div className="envoltura">
         <div className="aparecer mb-5 grid grid-cols-1 items-start gap-6 min-[960px]:grid-cols-[minmax(0,1fr)_minmax(0,300px)] min-[960px]:items-end min-[960px]:gap-x-[clamp(2rem,5vw,4rem)]">
           <div>
-            <p className="ceja">// proyectos</p>
-            <h2 id="titulo-proyectos" className="titulo-seccion">Algunos de nuestros proyectos</h2>
-            <div className="mt-6 flex flex-wrap gap-3" role="group" aria-label="Filtrar proyectos por tipo">
+            <p className="ceja">{t.proyectos.ceja}</p>
+            <h2 id="titulo-proyectos" className="titulo-seccion">{t.proyectos.titulo}</h2>
+            <div className="mt-6 flex flex-wrap gap-3" role="group" aria-label={t.proyectos.filtrar}>
               {CATEGORIAS_PROYECTO.map((c) => (
                 <button
                   key={c.id}
@@ -27,32 +30,28 @@ export function Proyectos() {
                   onClick={() => setFiltro(c.id)}
                   className="pildora flex-[1_1_40%] cursor-pointer rounded-xl border-0 bg-pu-500 px-6 py-2.5 text-[0.98rem] font-semibold text-white hover:bg-pu-400 sm:min-w-30 sm:flex-none"
                 >
-                  {c.texto}
+                  {c.texto[idioma]}
                 </button>
               ))}
             </div>
           </div>
           <div className="grid min-w-0 gap-2.5">
             <p className="m-0 text-[0.95rem] text-(--fg-muted)">
-              Filtra por tipo de proyecto.{' '}
-              {modo === 'codigo' ? (
-                <>En <strong className="font-semibold text-(--heading)">modo código</strong> ves el stack técnico de cada caso.</>
-              ) : (
-                <>En <strong className="font-semibold text-(--heading)">modo negocio</strong> ves para quién es cada caso y qué resultado entrega.</>
-              )}
+              {t.proyectos.ayuda}{' '}
+              {explicacion.antes}<strong className="font-semibold text-(--heading)">{explicacion.fuerte}</strong>{explicacion.despues}
             </p>
             <button
               type="button"
               onClick={() => setModo((m) => (m === 'codigo' ? 'negocio' : 'codigo'))}
               className="cursor-pointer justify-self-start border-0 bg-transparent py-1 text-base font-bold text-(--eyebrow) underline-offset-4 hover:text-(--acento-hover) hover:underline"
             >
-              {modo === 'codigo' ? 'Cambiar a modo negocio →' : 'Cambiar a modo código →'}
+              {modo === 'codigo' ? t.proyectos.cambiarANegocio : t.proyectos.cambiarACodigo}
             </button>
           </div>
         </div>
 
         <p className="mb-7 font-mono text-[0.8rem] text-(--fg-muted)" aria-live="polite">
-          Mostrando {visibles.length} de {PROYECTOS.length} proyectos
+          {t.proyectos.mostrando(visibles.length, PROYECTOS.length)}
         </p>
 
         <div className="grid grid-cols-1 gap-[clamp(1.25rem,2.5vw,2rem)] sm:grid-cols-2 lg:grid-cols-3">
@@ -66,6 +65,7 @@ export function Proyectos() {
 }
 
 function TarjetaProyecto({ proyecto, modo }: { proyecto: Proyecto; modo: Modo }) {
+  const { idioma, t } = useIdioma();
   return (
     <article className="proyecto oscuro aparecer flex min-w-0 flex-col rounded-[18px] p-2.5" data-cat={proyecto.categoria}>
       <div className="vidrio" aria-hidden>
@@ -73,11 +73,11 @@ function TarjetaProyecto({ proyecto, modo }: { proyecto: Proyecto; modo: Modo })
       </div>
       <div className="flex flex-1 flex-col gap-3 px-3.5 pt-5 pb-3.5">
         <div className="flex items-center justify-between gap-2.5 font-mono text-[0.74rem] text-pu-100">
-          <span>{NOMBRE_CATEGORIA[proyecto.categoria]}</span>
-          <span className="insignia">ejemplo</span>
+          <span>{NOMBRE_CATEGORIA[proyecto.categoria][idioma]}</span>
+          <span className="insignia">{t.proyectos.ejemplo}</span>
         </div>
-        <h3 className="m-0 font-titulo text-[1.9rem] leading-[1.05] font-bold tracking-[0.01em] text-white uppercase">{proyecto.titulo}</h3>
-        <p className="m-0 text-(--fg-muted)">{proyecto.descripcion}</p>
+        <h3 className="m-0 font-titulo text-[1.9rem] leading-[1.05] font-bold tracking-[0.01em] text-white uppercase">{proyecto.titulo[idioma]}</h3>
+        <p className="m-0 text-(--fg-muted)">{proyecto.descripcion[idioma]}</p>
         {modo === 'codigo' ? (
           <ul className="etiquetas mt-auto pt-1.5">
             {proyecto.stack.map((t) => <li key={t} className="etiqueta">{t}</li>)}
@@ -85,12 +85,12 @@ function TarjetaProyecto({ proyecto, modo }: { proyecto: Proyecto; modo: Modo })
         ) : (
           <dl className="mt-auto mb-0 grid gap-2 pt-1.5">
             <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-baseline gap-2">
-              <dt className="font-mono text-[0.72rem] text-pu-200">para</dt>
-              <dd className="m-0 text-[0.95rem] text-white">{proyecto.para}</dd>
+              <dt className="font-mono text-[0.72rem] text-pu-200">{t.proyectos.para}</dt>
+              <dd className="m-0 text-[0.95rem] text-white">{proyecto.para[idioma]}</dd>
             </div>
             <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-baseline gap-2">
-              <dt className="font-mono text-[0.72rem] text-pu-200">resultado</dt>
-              <dd className="m-0 text-[0.95rem] text-white">{proyecto.resultado}</dd>
+              <dt className="font-mono text-[0.72rem] text-pu-200">{t.proyectos.resultado}</dt>
+              <dd className="m-0 text-[0.95rem] text-white">{proyecto.resultado[idioma]}</dd>
             </div>
           </dl>
         )}

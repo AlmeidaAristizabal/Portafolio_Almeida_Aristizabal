@@ -1,3 +1,4 @@
+import { TEXTOS, type Idioma } from '../i18n/textos';
 import type { DatosContacto } from '../schemas/contacto';
 
 export type RespuestaContacto =
@@ -6,9 +7,9 @@ export type RespuestaContacto =
 
 const URL_API = import.meta.env.VITE_URL_API ?? '';
 const LIMITE_MS = 10_000;
-const MENSAJE_EXITO = '¡Listo! Te respondemos pronto.';
 
-export async function enviarContacto(datos: DatosContacto): Promise<RespuestaContacto> {
+export async function enviarContacto(datos: DatosContacto, idioma: Idioma = 'es'): Promise<RespuestaContacto> {
+  const t = TEXTOS[idioma].servicio;
   let respuesta: Response;
   try {
     respuesta = await fetch(`${URL_API}/api/contacto`, {
@@ -20,19 +21,20 @@ export async function enviarContacto(datos: DatosContacto): Promise<RespuestaCon
     });
   } catch (error) {
     if (error instanceof DOMException && error.name === 'TimeoutError') {
-      return { ok: false, mensaje: 'El servidor se demoró mucho en responder. Intenta de nuevo.' };
+      return { ok: false, mensaje: t.lento };
     }
     // Se cayó el internet o el servidor está dormido
-    return { ok: false, mensaje: 'No hay conexión con el servidor. Intenta de nuevo.' };
+    return { ok: false, mensaje: t.sinConexion };
   }
 
   // Un 502 del proxy llega en HTML: no nos tragamos cualquier cosa que diga ser JSON
   const cuerpo: unknown = await respuesta.json().catch(() => null);
   // Y si dice "ok: true" con un 500, tampoco le creemos
   if (!esRespuesta(cuerpo) || (cuerpo.ok && !respuesta.ok)) {
-    return { ok: false, mensaje: `El servidor respondió raro (${respuesta.status}). Intenta más tarde.` };
+    return { ok: false, mensaje: t.raro(respuesta.status) };
   }
-  if (cuerpo.ok) return { ok: true, mensaje: cuerpo.mensaje || MENSAJE_EXITO };
+  // El servidor contesta en español: en inglés preferimos nuestro propio mensaje de éxito
+  if (cuerpo.ok) return { ok: true, mensaje: (idioma === 'es' && cuerpo.mensaje) || t.exito };
   return cuerpo;
 }
 

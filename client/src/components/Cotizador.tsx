@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { COP_POR_USD, FECHA_TASA, TIPO_POR_DEFECTO, TIPOS_COTIZADOR, type TipoContacto } from '../data/cotizador';
 import { useAvisoTemporal } from '../hooks/useAvisoTemporal';
+import { useIdioma } from '../hooks/useIdioma';
 import { useMovimientoReducido } from '../hooks/useMovimientoReducido';
-import { calcularCotizacion, desdeUsd, formatearDinero, mensajeCotizacion, type Moneda } from '../utils/cotizador';
+import { calcularCotizacion, desdeUsd, formatearDinero, LOCALE, mensajeCotizacion, type Moneda } from '../utils/cotizador';
 
 export interface CotizacionElegida {
   tipoContacto: TipoContacto;
@@ -13,16 +14,18 @@ const buscarTipo = (id: string) => TIPOS_COTIZADOR.find((t) => t.id === id) ?? T
 
 export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegida) => void }) {
   const movimientoReducido = useMovimientoReducido();
+  const { idioma, t } = useIdioma();
   const [tipoId, setTipoId] = useState(TIPO_POR_DEFECTO);
   const [moneda, setMoneda] = useState<Moneda>('USD');
   const [enviado, avisarEnviado] = useAvisoTemporal(false, 3000);
 
   const tipo = buscarTipo(tipoId);
-  const { minimoUsd, maximoUsd, semanas } = calcularCotizacion(tipo);
+  const { minimoUsd, maximoUsd, semanas } = calcularCotizacion(tipo, idioma);
+  const dinero = (usd: number, pequeno = false) => formatearDinero(usd, moneda, pequeno, idioma);
   const precio = useConteo(minimoUsd, maximoUsd, !movimientoReducido);
 
   const enviar = () => {
-    onEnviar({ tipoContacto: tipo.tipoContacto, mensaje: mensajeCotizacion(tipo, moneda) });
+    onEnviar({ tipoContacto: tipo.tipoContacto, mensaje: mensajeCotizacion(tipo, moneda, idioma) });
     avisarEnviado(true);
   };
 
@@ -32,11 +35,11 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
         <div className="border-t border-(--hair) py-[clamp(4rem,9vw,6.5rem)]">
           <div className="aparecer mb-[clamp(2rem,5vw,3rem)] grid grid-cols-1 items-end gap-x-[clamp(2rem,5vw,4rem)] gap-y-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             <div>
-              <p className="ceja">// cotizador</p>
-              <h2 id="titulo-cotizador" className="titulo-seccion">Calcula tu proyecto en <span className="text-verde">30 segundos</span></h2>
+              <p className="ceja">{t.cotizador.ceja}</p>
+              <h2 id="titulo-cotizador" className="titulo-seccion">{t.cotizador.titulo.antes}<span className="text-verde">{t.cotizador.titulo.verde}</span></h2>
             </div>
             <p className="intro-seccion m-0">
-              Elige lo que necesitas y obtén al instante un rango de inversión y de tiempo. Sin formularios eternos.
+              {t.cotizador.intro}
             </p>
           </div>
 
@@ -45,28 +48,28 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
               <div className="flex items-center gap-3.5">
                 <span className="grid size-7.5 flex-none place-items-center rounded-full border border-(--line) font-mono text-[0.76rem] text-(--eyebrow)" aria-hidden>1</span>
                 <h3 id="titulo-paso-1" className="m-0 font-titulo text-[1.7rem] leading-tight font-semibold tracking-[0.02em] text-(--heading) uppercase">
-                  ¿Qué necesitas construir?
+                  {t.cotizador.paso1}
                 </h3>
               </div>
               <div className="grid grid-cols-1 gap-3 min-[521px]:grid-cols-2 min-[761px]:grid-cols-3" role="radiogroup" aria-labelledby="titulo-paso-1">
-                {TIPOS_COTIZADOR.map((t) => {
-                  const marcada = t.id === tipoId;
+                {TIPOS_COTIZADOR.map((opcion) => {
+                  const marcada = opcion.id === tipoId;
                   return (
                     <label
-                      key={t.id}
+                      key={opcion.id}
                       className={`opcion-cotizador relative grid min-w-0 cursor-pointer content-start gap-1 rounded-[14px] border-[1.5px] border-(--line) bg-(--superficie) py-4 pr-11 pl-4 ${marcada ? 'marcada' : ''}`}
                     >
                       <input
                         type="radio"
                         name="tipo-cotizador"
-                        value={t.id}
+                        value={opcion.id}
                         checked={marcada}
-                        onChange={() => setTipoId(t.id)}
+                        onChange={() => setTipoId(opcion.id)}
                         className="absolute inset-0 m-0 size-full cursor-pointer opacity-0"
                       />
-                      <b className="text-base leading-snug font-bold text-(--heading)">{t.nombre}</b>
-                      <small className="text-[0.88rem] leading-snug text-(--fg-muted)">{t.descripcion}</small>
-                      <em className="mt-1 font-mono text-[0.72rem] text-(--eyebrow) not-italic">desde {formatearDinero(desdeUsd(t), moneda, true)}</em>
+                      <b className="text-base leading-snug font-bold text-(--heading)">{opcion.nombre[idioma]}</b>
+                      <small className="text-[0.88rem] leading-snug text-(--fg-muted)">{opcion.descripcion[idioma]}</small>
+                      <em className="mt-1 font-mono text-[0.72rem] text-(--eyebrow) not-italic">{t.cotizador.desde(dinero(desdeUsd(opcion), true))}</em>
                     </label>
                   );
                 })}
@@ -79,9 +82,9 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
             >
               <div className="flex items-center justify-between gap-4">
                 <p id="etiqueta-resumen" className="m-0 font-mono text-[0.74rem] tracking-[0.06em] text-pu-100 uppercase">
-                  Inversión estimada · {moneda}
+                  {t.cotizador.inversion} · {moneda}
                 </p>
-                <div className="selector-moneda inline-flex rounded-full border border-(--dark-line) bg-(--dark-surface-2) p-0.75" role="group" aria-label="Moneda">
+                <div className="selector-moneda inline-flex rounded-full border border-(--dark-line) bg-(--dark-surface-2) p-0.75" role="group" aria-label={t.cotizador.moneda}>
                   {(['USD', 'COP'] as const).map((m) => (
                     <button
                       key={m}
@@ -96,38 +99,37 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                 </div>
               </div>
               <p className="m-0 font-titulo text-[clamp(2.4rem,3.8vw,3.1rem)] leading-[1.05] font-bold tracking-[0.01em] text-white tabular-nums" aria-hidden>
-                <span className="block">{formatearDinero(precio.minimo, moneda)} –</span>
-                <span className="block">{formatearDinero(precio.maximo, moneda)}</span>
+                <span className="block">{dinero(precio.minimo)} –</span>
+                <span className="block">{dinero(precio.maximo)}</span>
               </p>
               <p className="m-0 text-pu-100">
-                Entrega estimada: <strong className="text-white">{semanas}</strong>
+                {t.cotizador.entrega} <strong className="text-white">{semanas}</strong>
               </p>
               <ul className="m-0 grid list-none p-0">
                 <li className="flex items-baseline justify-between gap-4 border-t border-(--dark-hair) py-2 text-[0.92rem] text-in-100">
-                  <span>Proyecto</span>
-                  <span className="font-mono text-[0.8rem] whitespace-nowrap text-white">{tipo.nombre}</span>
+                  <span>{t.cotizador.proyecto}</span>
+                  <span className="font-mono text-[0.8rem] whitespace-nowrap text-white">{tipo.nombre[idioma]}</span>
                 </li>
               </ul>
               <div className="grid gap-2.5">
                 <button type="button" className="boton boton-verde w-full" onClick={enviar}>
-                  {enviado ? 'Listo: completa tus datos abajo ↓' : 'Enviar esta cotización →'}
+                  {enviado ? t.cotizador.enviado : t.cotizador.enviar}
                 </button>
                 <button type="button" className="boton boton-fantasma w-full" onClick={() => { setTipoId(TIPO_POR_DEFECTO); setMoneda('USD'); }}>
-                  Reiniciar
+                  {t.cotizador.reiniciar}
                 </button>
               </div>
               <p className="m-0 text-[0.82rem] leading-normal text-in-100">
-                Estimación de referencia calculada con proyectos típicos. La propuesta final se confirma después de una breve llamada.
+                {t.cotizador.aviso}
               </p>
               {moneda === 'COP' && (
                 <p className="m-0 font-mono text-[0.72rem] text-in-200">
-                  Conversión con la TRM de referencia: 1 USD = $ {COP_POR_USD.toLocaleString('es-CO')} COP ({FECHA_TASA}).
+                  {t.cotizador.trm(COP_POR_USD.toLocaleString(LOCALE[idioma]), FECHA_TASA[idioma])}
                 </p>
               )}
               {/* Pa' lectores de pantalla: el precio que cuenta animado no se lee bien, este sí */}
               <p className="sr-only" aria-live="polite">
-                Inversión estimada entre {formatearDinero(minimoUsd, moneda)} y {formatearDinero(maximoUsd, moneda)}
-                {moneda === 'COP' ? ' pesos' : ''}, entrega en {semanas}.
+                {t.cotizador.lector(dinero(minimoUsd), dinero(maximoUsd), moneda === 'COP', semanas)}
               </p>
             </aside>
           </div>

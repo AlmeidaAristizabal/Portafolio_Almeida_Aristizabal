@@ -5,10 +5,12 @@ import { CORREO_CONTACTO, ENLACE_GITHUB, ENLACE_LINKEDIN } from '../data/conteni
 import { FOTO_ELEIRA, FOTO_JUAN } from '../data/fotos';
 import { volarAvioneta } from '../efectos/avionetaEnviado';
 import { useAvisoTemporal } from '../hooks/useAvisoTemporal';
+import { useIdioma } from '../hooks/useIdioma';
 import { useMovimientoReducido } from '../hooks/useMovimientoReducido';
 import { esquemaContacto, MAX_MOTIVO, OPCIONES_PROYECTO, type DatosContacto } from '../schemas/contacto';
+import { traducirError } from '../i18n/textos';
 import { enviarContacto } from '../services/contactoService';
-import { PREFIJO_COTIZACION } from '../utils/cotizador';
+import { esMensajeDelCotizador } from '../utils/cotizador';
 import type { CotizacionElegida } from './Cotizador';
 
 type Estado = { tipo: 'quieto' } | { tipo: 'exito' | 'error'; mensaje: string };
@@ -19,6 +21,7 @@ const esCampoVisible = (campo: string): campo is (typeof CAMPOS_VISIBLES)[number
 
 export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null }) {
   const movimientoReducido = useMovimientoReducido();
+  const { idioma, t } = useIdioma();
   const [estado, setEstado] = useState<Estado>({ tipo: 'quieto' });
   const [volando, setVolando] = useState(false);
   const seccion = useRef<HTMLElement>(null);
@@ -53,7 +56,7 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
     setValue('proyecto', cotizacion.tipoContacto);
     // Solo pisamos el motivo si está vacío o lo escribió el mismo cotizador: lo que escribió la persona es sagrado
     const actual = getValues('motivo').trim();
-    if (!actual || actual.startsWith(PREFIJO_COTIZACION)) {
+    if (!actual || esMensajeDelCotizador(actual)) {
       setValue('motivo', cotizacion.mensaje, { shouldValidate: true });
     }
     const reducido = reducidoRef.current;
@@ -64,7 +67,7 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
 
   const alEnviar = async (datos: DatosContacto) => {
     setEstado({ tipo: 'quieto' });
-    const respuesta = await enviarContacto(datos);
+    const respuesta = await enviarContacto(datos, idioma);
 
     if (!respuesta.ok) {
       // Si el servidor dice qué campo falló, lo pintamos debajo de ese campo.
@@ -72,7 +75,7 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
       for (const [campo, mensaje] of Object.entries(respuesta.errores ?? {})) {
         if (esCampoVisible(campo)) setError(campo, { message: mensaje });
       }
-      setEstado({ tipo: 'error', mensaje: respuesta.mensaje ?? 'Revisa los campos marcados.' });
+      setEstado({ tipo: 'error', mensaje: respuesta.mensaje ?? t.contacto.revisaCampos });
       return;
     }
 
@@ -87,6 +90,7 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
         fotoJuan: fotoJuan.current, fotoEleira: fotoEleira.current, tarjeta: tarjeta.current,
       },
       () => { setVolando(false); cancelarVuelo.current = null; reset(); },
+      t.contacto.pancarta,
     );
   };
 
@@ -103,58 +107,58 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
         id="titulo-contacto"
         className="absolute top-0 left-[calc(max(0px,(100%-1180px)/2)+clamp(16px,4vw,40px))] z-[4] m-0 -translate-y-1/2 rounded-full border-[1.5px] border-in-100 bg-in-600 px-7 py-2 text-[clamp(1.15rem,2.2vw,1.4rem)] leading-snug font-bold text-white shadow-[0_12px_26px_-14px_var(--win-shadow)]"
       >
-        Contáctanos
+        {t.contacto.titulo}
       </h2>
 
       <div className="envoltura relative z-[1] grid flex-1 grid-cols-1 gap-0 min-[861px]:grid-cols-[minmax(0,1fr)_minmax(0,400px)] min-[861px]:gap-[clamp(2rem,5vw,4rem)] min-[1024px]:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
         <div className="flex min-w-0 flex-col justify-center gap-7 pt-[clamp(4.5rem,10vh,6.5rem)] pb-10 min-[861px]:pb-[clamp(3rem,7vh,5rem)]">
           <div>
             <p className="m-0 font-titulo text-[clamp(2.6rem,5vw,4rem)] leading-none font-semibold tracking-[0.01em] text-balance text-white uppercase">
-              ¿Tienes un proyecto en mente?
+              {t.contacto.pregunta}
             </p>
             <p className="mt-3 mb-0 max-w-[50ch] text-in-100">
-              Cuéntanos qué quieres construir. Te respondemos con preguntas concretas y una propuesta de alcance.
+              {t.contacto.intro}
             </p>
           </div>
 
           <form ref={formulario} onSubmit={(e) => void handleSubmit(alEnviar)(e)} noValidate className="flex flex-col gap-4 min-[861px]:max-w-[600px]">
-            <Fila etiqueta={<span id="etiqueta-tipo">Proyecto</span>}>
+            <Fila etiqueta={<span id="etiqueta-tipo">{t.contacto.proyecto}</span>}>
               <div className="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="etiqueta-tipo">
                 {OPCIONES_PROYECTO.map((o) => (
                   <label key={o.id} className="chip-tipo relative">
                     <input type="radio" value={o.id} {...register('proyecto')} className="absolute inset-0 m-0 cursor-pointer opacity-0" />
                     <span className="inline-flex items-center rounded-full border border-(--field-bd) px-4 py-2 text-[0.93rem] font-semibold text-in-50">
-                      {o.texto}
+                      {o.texto[idioma]}
                     </span>
                   </label>
                 ))}
               </div>
             </Fila>
 
-            <Fila etiqueta={<label htmlFor="nombre">Nombre</label>} error={errors.nombre?.message} idError="error-nombre">
-              <input id="nombre" className="campo" type="text" autoComplete="name" placeholder="Tu nombre completo"
+            <Fila etiqueta={<label htmlFor="nombre">{t.contacto.nombre}</label>} error={traducirError(t, errors.nombre?.message)} idError="error-nombre">
+              <input id="nombre" className="campo" type="text" autoComplete="name" placeholder={t.contacto.phNombre}
                 aria-invalid={!!errors.nombre} aria-describedby="error-nombre" {...register('nombre')} />
             </Fila>
-            <Fila etiqueta={<label htmlFor="correo">Correo</label>} error={errors.correo?.message} idError="error-correo">
-              <input id="correo" className="campo" type="email" autoComplete="email" inputMode="email" placeholder="nombre@dominio.com"
+            <Fila etiqueta={<label htmlFor="correo">{t.contacto.correo}</label>} error={traducirError(t, errors.correo?.message)} idError="error-correo">
+              <input id="correo" className="campo" type="email" autoComplete="email" inputMode="email" placeholder={t.contacto.phCorreo}
                 aria-invalid={!!errors.correo} aria-describedby="error-correo" {...register('correo')} />
             </Fila>
             <Fila
-              etiqueta={<label htmlFor="celular">Celular <span className="block text-[0.76rem] font-normal text-in-200">opcional</span></label>}
-              error={errors.celular?.message}
+              etiqueta={<label htmlFor="celular">{t.contacto.celular} <span className="block text-[0.76rem] font-normal text-in-200">{t.contacto.opcional}</span></label>}
+              error={traducirError(t, errors.celular?.message)}
               idError="error-celular"
             >
-              <input id="celular" className="campo" type="tel" autoComplete="tel" inputMode="tel" placeholder="300 123 4567"
+              <input id="celular" className="campo" type="tel" autoComplete="tel" inputMode="tel" placeholder={t.contacto.phCelular}
                 aria-invalid={!!errors.celular} aria-describedby="error-celular" {...register('celular')} />
             </Fila>
             <Fila
-              etiqueta={<label htmlFor="motivo">Motivo</label>}
-              error={errors.motivo?.message}
+              etiqueta={<label htmlFor="motivo">{t.contacto.motivo}</label>}
+              error={traducirError(t, errors.motivo?.message)}
               idError="error-motivo"
               extra={<p id="contador-motivo" className="mt-1.5 mb-0 ml-auto font-mono text-[0.72rem] text-in-200 tabular-nums">{largoMotivo} / {MAX_MOTIVO}</p>}
             >
               <textarea id="motivo" className="campo" rows={4} maxLength={MAX_MOTIVO}
-                placeholder="Ej.: Deseo cotizar una página web para una pastelería que vende varias categorías de productos."
+                placeholder={t.contacto.phMotivo}
                 aria-invalid={!!errors.motivo} aria-describedby="error-motivo contador-motivo" {...register('motivo')} />
             </Fila>
 
@@ -176,12 +180,12 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
                 disabled={ocupado}
                 className={`boton-enviar inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border-[1.5px] border-white bg-in-600 px-10 py-2.5 text-[1.3rem] leading-snug font-bold text-white sm:w-auto ${volando ? 'volando' : ''}`}
               >
-                {isSubmitting ? 'Enviando…' : 'Enviar'}
+                {isSubmitting ? t.contacto.enviando : t.contacto.enviar}
                 <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <path d="M5 19 19 5" /><path d="M9 5h10v10" />
                 </svg>
               </button>
-              <p className="m-0 text-[0.86rem] text-in-200">Solo usamos tus datos para responderte.</p>
+              <p className="m-0 text-[0.86rem] text-in-200">{t.contacto.privacidad}</p>
             </div>
           </form>
         </div>
@@ -226,7 +230,9 @@ function Fila({ etiqueta, error, idError, extra, children }: PropsFila) {
 }
 
 function TarjetaCorreo({ ref }: { ref: React.Ref<HTMLDivElement> }) {
-  const [texto, avisar] = useAvisoTemporal('Copiar', 2000);
+  const { t } = useIdioma();
+  // Guardamos la clave y no el texto: si cambian el idioma con el aviso puesto, también se traduce
+  const [aviso, avisar] = useAvisoTemporal<'copiar' | 'copiado' | 'seleccionalo'>('copiar', 2000);
   const correo = useRef<HTMLSpanElement>(null);
 
   // Si el portapapeles no deja, al menos dejamos el correo seleccionado pa' que lo copien a mano
@@ -241,10 +247,10 @@ function TarjetaCorreo({ ref }: { ref: React.Ref<HTMLDivElement> }) {
   const copiar = async () => {
     try {
       await navigator.clipboard.writeText(CORREO_CONTACTO);
-      avisar('Copiado');
+      avisar('copiado');
     } catch {
       seleccionar();
-      avisar('Selecciónalo');
+      avisar('seleccionalo');
     }
   };
 
@@ -253,10 +259,10 @@ function TarjetaCorreo({ ref }: { ref: React.Ref<HTMLDivElement> }) {
       ref={ref}
       className="relative z-[3] grid w-auto gap-3.5 self-stretch rounded-2xl border border-(--dark-line) bg-(--dark-surface) px-5 py-5 backdrop-blur-[10px] min-[861px]:w-[min(100%,380px)] min-[861px]:self-end"
     >
-      <p className="m-0 font-mono text-[0.76rem] text-in-100">¿Prefieres escribirnos directo?</p>
+      <p className="m-0 font-mono text-[0.76rem] text-in-100">{t.contacto.directo}</p>
       <div className="flex flex-wrap items-center justify-between gap-2.5">
         <span ref={correo} className="min-w-0 font-mono text-[1.02rem] break-all text-white select-all">{CORREO_CONTACTO}</span>
-        <button type="button" className="boton boton-fantasma boton-sm" onClick={copiar}>{texto}</button>
+        <button type="button" className="boton boton-fantasma boton-sm" onClick={copiar}>{t.contacto[aviso]}</button>
       </div>
       <div className="flex flex-wrap gap-2.5">
         <a className="boton boton-fantasma boton-sm" href={ENLACE_GITHUB} target="_blank" rel="noopener">GitHub ↗</a>

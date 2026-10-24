@@ -15,17 +15,25 @@ export interface ElementosHero {
   cinta: HTMLElement | null;
 }
 
+// Los letreritos de estado: se piden cada vez pa' que salgan en el idioma que esté puesto en ese momento
+export interface EstadosHero {
+  enLinea: string;
+  carga: string[];
+  deploy: string;
+  recompilando: string;
+  exito: string;
+}
+
 interface Punto { x: number; y: number }
 interface Caja extends Punto { w: number; h: number }
 interface Rayo { desde: () => Punto; hasta: () => Punto; color: string; vida: number; ancho: number; nacio: number }
 interface Volador { el: HTMLDivElement; x0: number; y0: number; extra: boolean; tx: number; ty: number; r: number; s: number }
 
 const EXTRA = ['Laravel', 'Flutter', 'SQL', 'Bash'];
-const MENSAJES_CARGA = ['Compilando…', 'Instalando dependencias…', 'Ejecutando pruebas…', '¡Casi listo!'];
 // Después de estas, solo explota si le dan clic: la gente vino a contratar, no a ver Rápidos y Furiosos
 const MAX_AUTOMATICAS = 2;
 
-export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => void): () => void {
+export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => void, estados: () => EstadosHero): () => void {
   const { hero, orbita, nucleo, capa, lienzo, destello, estado, estadoTxt, rol, texto, cinta } = el;
   const ctx = lienzo.getContext('2d');
   if (!ctx || !Element.prototype.animate) return () => {};
@@ -192,8 +200,8 @@ export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => voi
     fase = 'carga';
     orbita.style.setProperty('--carga', `${dur}ms`);
     orbita.classList.add('cargando');
-    const paso = dur / MENSAJES_CARGA.length;
-    MENSAJES_CARGA.forEach((msg, i) => luego(() => ponerEstado(msg), i * paso));
+    const mensajes = estados().carga, paso = dur / mensajes.length;
+    mensajes.forEach((msg, i) => luego(() => ponerEstado(msg), i * paso));
     luego(explotar, dur);
   }
   function explotar() {
@@ -225,7 +233,7 @@ export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => voi
       ], { duration: 700 + Math.random() * 400, easing: 'cubic-bezier(.12,.8,.25,1)', fill: 'forwards' });
     });
     luego(cambiarTema, 220);
-    ponerEstado('¡Deploy!');
+    ponerEstado(estados().deploy);
     luego(jalarDeVuelta, 1700);
   }
   function cambiarTema() {
@@ -238,7 +246,7 @@ export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => voi
   }
   function jalarDeVuelta() {
     fase = 'jalando';
-    ponerEstado('Recompilando…');
+    ponerEstado(estados().recompilando);
     const color = temaAzul ? COL.b : COL.a, espacio = 240;
     const orden = voladores.slice().sort(() => Math.random() - 0.5);
     orden.forEach((f, i) => {
@@ -262,9 +270,9 @@ export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => voi
     anilloExpansivo(C.x, C.y, 80, 6, 700);
     orbita.classList.remove('explotando');
     orbita.classList.add('regresando');
-    ponerEstado('Build exitoso');
+    ponerEstado(estados().exito);
     luego(() => orbita.classList.remove('regresando'), 1500);
-    luego(() => { fase = 'quieto'; ponerEstado('En línea'); programar(6500); }, 2400);
+    luego(() => { fase = 'quieto'; ponerEstado(estados().enLinea); programar(6500); }, 2400);
   }
   function programar(ms: number) {
     window.clearTimeout(siguiente);

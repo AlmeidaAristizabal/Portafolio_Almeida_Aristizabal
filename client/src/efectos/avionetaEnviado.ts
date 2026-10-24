@@ -23,7 +23,7 @@ const caja = (el: Element): Caja => {
 const limitar = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
 const suave = (x: number) => { x = limitar(x, 0, 1); return x * x * (3 - 2 * x); };
 
-export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void): () => void {
+export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void, pancarta = '¡ENVIADO!'): () => void {
   const vw = window.innerWidth, vh = window.innerHeight;
   const { boton, seccion: sec } = el;
   const k = limitar(vw / 1100, 0.8, 1.25);
@@ -68,7 +68,7 @@ export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void): ()
   // Pancarta
   const fuente = `700 ${Math.round(22 * k)}px ${v('--font-titulo')}`;
   fctx.font = fuente;
-  const letras = Array.from('¡ENVIADO!').map((ch) => ({ ch, w: fctx.measureText(ch).width, en: 0 }));
+  const letras = Array.from(pancarta).map((ch) => ({ ch, w: fctx.measureText(ch).width, en: 0 }));
   const sep = 2.4 * k, relleno = 16 * k;
   let anchoTexto = 0;
   letras.forEach((c, i) => { c.en = anchoTexto; anchoTexto += c.w + (i < letras.length - 1 ? sep : 0); });
