@@ -1,11 +1,11 @@
 # Portafolio_Almeida_Aristizabal
 
-Portafolio de AJ (Alejandra Aristizabal y Juan Pablo Almeida): quiénes somos, qué hacemos, los proyectos, un cotizador que da un rango de precio en 30 segundos y un formulario de contacto que manda el mensaje al correo.
+Portafolio de AJ (Alejandra Aristizabal y Juan Pablo Almeida): quiénes somos, qué hacemos, los proyectos, un cotizador que da un rango de precio en 30 segundos y un formulario de contacto que guarda el mensaje y lo manda al correo.
 
 ## Stack
 
 - **client/**: React 19 + TypeScript + Vite + Tailwind CSS v4, formularios con React Hook Form + Zod, pruebas con Vitest y Testing Library, lint con oxlint.
-- **server/**: Express 5 + TypeScript, validación con Zod, correos con Nodemailer, `helmet` y límite de mensajes por IP, pruebas con Vitest y Supertest.
+- **server/**: Express 5 + TypeScript, validación con Zod, correos con Nodemailer, mensajes guardados en un archivo JSON (`server/datos/contactos.json`), `helmet` y límite de mensajes por IP, pruebas con Vitest y Supertest.
 
 ## Cómo correrlo
 
@@ -42,6 +42,7 @@ cd server && npm test
 | `SALTOS_PROXY` | Cuántos proxies hay delante del server. En Render o Railway normalmente es `1`; en local, `0` |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USUARIO`, `SMTP_CLAVE` | Cuenta de correo que manda los mensajes. En producción son obligatorias: sin ellas el server no arranca |
 | `CORREO_DESTINO` | A dónde llegan los mensajes (si no se pone, llegan a `SMTP_USUARIO`) |
+| `RUTA_CONTACTOS` | Archivo donde se guardan los mensajes (por defecto `datos/contactos.json`). En Render o Railway apúntalo a un disco persistente, o se borran en cada deploy |
 
 **client** (opcional): `VITE_URL_API` es la URL del server cuando client y server se publican en dominios distintos.
 

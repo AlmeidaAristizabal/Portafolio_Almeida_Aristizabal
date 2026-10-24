@@ -5,6 +5,9 @@ import { crearApp } from '../src/app.js';
 vi.mock('../src/services/correoService.js', () => ({
   enviarCorreoContacto: vi.fn().mockResolvedValue(undefined),
 }));
+vi.mock('../src/services/contactoRepositorio.js', () => ({
+  guardarContacto: vi.fn().mockResolvedValue(undefined),
+}));
 
 // Va en archivo aparte porque el contador del limitador se queda con la memoria entre pruebas
 describe('límite de mensajes', () => {

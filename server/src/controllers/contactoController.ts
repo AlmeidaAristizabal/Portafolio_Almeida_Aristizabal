@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { esquemaMensajeContacto } from '../models/MensajeContacto.js';
+import { guardarContacto } from '../services/contactoRepositorio.js';
 import { enviarCorreoContacto } from '../services/correoService.js';
 
 const RESPUESTA_EXITO = { ok: true, mensaje: '¡Listo! Te respondemos pronto.' };
@@ -23,6 +24,8 @@ export async function recibirContacto(req: Request, res: Response, next: NextFun
   }
 
   try {
+    // Primero se guarda: si Gmail se pone bravo, el mensaje igual no se pierde
+    await guardarContacto(resultado.data);
     await enviarCorreoContacto(resultado.data);
     return res.status(201).json(RESPUESTA_EXITO);
   } catch (error) {
