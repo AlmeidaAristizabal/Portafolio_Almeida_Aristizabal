@@ -29,7 +29,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
   return (
     <section id="cotizador" aria-labelledby="titulo-cotizador">
       <div className="envoltura">
-        <div className="border-t border-(--light-hair) py-[clamp(4rem,9vw,6.5rem)]">
+        <div className="border-t border-(--hair) py-[clamp(4rem,9vw,6.5rem)]">
           <div className="aparecer mb-[clamp(2rem,5vw,3rem)] grid grid-cols-1 items-end gap-x-[clamp(2rem,5vw,4rem)] gap-y-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             <div>
               <p className="ceja">// cotizador</p>
@@ -41,10 +41,10 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
           </div>
 
           <div className="grid grid-cols-1 items-start gap-[clamp(1.25rem,3vw,2.25rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)]">
-            <div className="grid min-w-0 gap-5 rounded-[18px] border border-in-100 bg-white p-[clamp(1.15rem,2.5vw,1.6rem)] shadow-[0_14px_30px_-24px_var(--card-shadow)]">
+            <div className="grid min-w-0 gap-5 rounded-[18px] border border-(--line) bg-(--superficie) p-[clamp(1.15rem,2.5vw,1.6rem)] shadow-[0_14px_30px_-24px_var(--card-shadow)]">
               <div className="flex items-center gap-3.5">
-                <span className="grid size-7.5 flex-none place-items-center rounded-full border border-in-100 font-mono text-[0.76rem] text-pu-500" aria-hidden>1</span>
-                <h3 id="titulo-paso-1" className="m-0 font-titulo text-[1.7rem] leading-tight font-semibold tracking-[0.02em] text-in-600 uppercase">
+                <span className="grid size-7.5 flex-none place-items-center rounded-full border border-(--line) font-mono text-[0.76rem] text-(--eyebrow)" aria-hidden>1</span>
+                <h3 id="titulo-paso-1" className="m-0 font-titulo text-[1.7rem] leading-tight font-semibold tracking-[0.02em] text-(--heading) uppercase">
                   ¿Qué necesitas construir?
                 </h3>
               </div>
@@ -54,7 +54,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                   return (
                     <label
                       key={t.id}
-                      className={`opcion-cotizador relative grid min-w-0 cursor-pointer content-start gap-1 rounded-[14px] border-[1.5px] border-in-100 bg-white py-4 pr-11 pl-4 ${marcada ? 'marcada' : ''}`}
+                      className={`opcion-cotizador relative grid min-w-0 cursor-pointer content-start gap-1 rounded-[14px] border-[1.5px] border-(--line) bg-(--superficie) py-4 pr-11 pl-4 ${marcada ? 'marcada' : ''}`}
                     >
                       <input
                         type="radio"
@@ -64,9 +64,9 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                         onChange={() => setTipoId(t.id)}
                         className="absolute inset-0 m-0 size-full cursor-pointer opacity-0"
                       />
-                      <b className="text-base leading-snug font-bold text-in-600">{t.nombre}</b>
-                      <small className="text-[0.88rem] leading-snug text-gr-400">{t.descripcion}</small>
-                      <em className="mt-1 font-mono text-[0.72rem] text-pu-500 not-italic">desde {formatearDinero(desdeUsd(t), moneda, true)}</em>
+                      <b className="text-base leading-snug font-bold text-(--heading)">{t.nombre}</b>
+                      <small className="text-[0.88rem] leading-snug text-(--fg-muted)">{t.descripcion}</small>
+                      <em className="mt-1 font-mono text-[0.72rem] text-(--eyebrow) not-italic">desde {formatearDinero(desdeUsd(t), moneda, true)}</em>
                     </label>
                   );
                 })}

@@ -39,6 +39,38 @@
   --tag-bg: var(--color-pu-50);
   --tag-fg: var(--color-pu-600);
   --tag-bd: var(--color-pu-100);
+
+  /* Piezas de las secciones claras que cambian con el modo oscuro */
+  --fondo: var(--color-bl-50);
+  --superficie: #fff;
+  --acento-hover: var(--color-pu-400);
+  --radio-bd: var(--color-gr-200);
+  --marcada-bg: var(--color-pu-50);
+  --marcada-anillo: var(--color-pu-100);
+  --ref-fg: var(--color-bl-400);
+}
+
+/* Modo oscuro: lo pone useTema en el <html>. Las secciones que ya eran oscuras quedan igualitas,
+   solo se apagan las claras (el fondo, las tarjetas blancas y sus textos) */
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+  --fg: var(--color-in-50);
+  --fg-muted: var(--color-in-100);
+  --heading: #fff;
+  --eyebrow: var(--color-pu-200);
+  --line: var(--dark-line);
+  --hair: var(--dark-hair);
+  --tag-bg: var(--dark-surface-2);
+  --tag-fg: var(--color-pu-50);
+  --tag-bd: var(--dark-hair);
+  --fondo: #0d0822;
+  --superficie: #18113a;
+  --acento-hover: var(--color-pu-100);
+  --radio-bd: var(--dark-line);
+  --marcada-bg: rgb(86 0 184 / 0.32);
+  --marcada-anillo: rgb(152 107 255 / 0.35);
+  --ref-bg: var(--dark-surface);
+  --ref-fg: var(--color-bl-100);
 }
 
 /* Contexto oscuro: secciones y tarjetas oscuras cambian estas variables y todo se acomoda solo */
@@ -419,7 +451,7 @@ button.nucleo { cursor: pointer; border: 0; padding: 0; }
 
 /* ---------- Proyectos ---------- */
 .pildora { transition: background-color 0.2s ease, box-shadow 0.2s ease; }
-.pildora[aria-pressed='true'] { background: var(--color-in-600); box-shadow: 0 0 0 2px var(--color-bl-50), 0 0 0 4px var(--color-bl-300); }
+.pildora[aria-pressed='true'] { background: var(--color-in-600); box-shadow: 0 0 0 2px var(--fondo), 0 0 0 4px var(--color-bl-300); }
 .proyecto {
   --card-from: var(--color-pu-500); --card-to: var(--color-pu-600);
   background: linear-gradient(165deg, var(--card-from) 0%, var(--card-to) 70%);
@@ -463,12 +495,12 @@ button.nucleo { cursor: pointer; border: 0; padding: 0; }
 
 /* ---------- Proceso ---------- */
 .commit { position: relative; display: flex; gap: 1.5rem; padding-bottom: 2.75rem; }
-.commit::before { content: ''; position: absolute; left: 13px; top: 34px; bottom: -6px; width: 2px; background: var(--color-in-100); }
+.commit::before { content: ''; position: absolute; left: 13px; top: 34px; bottom: -6px; width: 2px; background: var(--line); }
 .commit:last-child { padding-bottom: 0; }
 .commit:last-child::before { display: none; }
-.commit-punto { position: relative; z-index: 1; flex: none; width: 28px; height: 28px; margin-top: 6px; border: 3px solid var(--color-pu-500); border-radius: 50%; background: var(--color-bl-50); }
-.commit:last-child .commit-punto { background: var(--color-pu-500); box-shadow: 0 0 0 6px var(--color-pu-100); }
-.referencia { font-family: var(--font-mono); font-size: 0.82rem; padding: 0.15rem 0.75rem; border-radius: 999px; border: 1.5px solid var(--color-bl-300); color: var(--color-bl-400); background: var(--ref-bg); }
+.commit-punto { position: relative; z-index: 1; flex: none; width: 28px; height: 28px; margin-top: 6px; border: 3px solid var(--color-pu-500); border-radius: 50%; background: var(--fondo); }
+.commit:last-child .commit-punto { background: var(--color-pu-500); box-shadow: 0 0 0 6px var(--marcada-anillo); }
+.referencia { font-family: var(--font-mono); font-size: 0.82rem; padding: 0.15rem 0.75rem; border-radius: 999px; border: 1.5px solid var(--color-bl-300); color: var(--ref-fg); background: var(--ref-bg); }
 
 /* Camión AJ Express */
 .camion-fig svg { display: block; width: 100%; height: auto; overflow: visible; }
@@ -497,10 +529,10 @@ button.nucleo { cursor: pointer; border: 0; padding: 0; }
 .opcion-cotizador:hover { border-color: var(--color-pu-300); }
 .opcion-cotizador::after {
   content: ''; position: absolute; top: 1rem; right: 1rem; width: 18px; height: 18px; border-radius: 50%;
-  border: 1.5px solid var(--color-gr-200); background: #fff; transition: border-color 0.2s ease, background 0.2s ease;
+  border: 1.5px solid var(--radio-bd); background: var(--superficie); transition: border-color 0.2s ease, background 0.2s ease;
 }
-.opcion-cotizador.marcada { border-color: var(--color-pu-500); background: var(--color-pu-50); box-shadow: 0 0 0 3px var(--color-pu-100); }
-.opcion-cotizador.marcada::after { border-color: var(--color-pu-500); background: radial-gradient(circle, var(--color-pu-500) 0 42%, #fff 48%); }
+.opcion-cotizador.marcada { border-color: var(--color-pu-500); background: var(--marcada-bg); box-shadow: 0 0 0 3px var(--marcada-anillo); }
+.opcion-cotizador.marcada::after { border-color: var(--color-pu-500); background: radial-gradient(circle, var(--color-pu-500) 0 42%, var(--superficie) 48%); }
 .opcion-cotizador:has(input:focus-visible) { outline: 2px solid var(--color-bl-300); outline-offset: 3px; }
 .resumen-cotizador {
   background:

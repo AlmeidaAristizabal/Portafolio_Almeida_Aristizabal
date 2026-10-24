@@ -56,7 +56,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-bl-50 font-texto text-bl-600 antialiased;
+    @apply bg-(--fondo) font-texto text-(--fg) antialiased;
     font-size: 1.0625rem;
     line-height: 1.6;
     overflow-x: clip;
