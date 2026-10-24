@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { SERVICIOS, type Servicio } from '../data/contenido';
+import { useIdioma } from '../hooks/useIdioma';
 import { useMovimientoReducido } from '../hooks/useMovimientoReducido';
 
 const ICONOS: Record<Servicio['id'], React.ReactNode> = {
@@ -14,6 +15,7 @@ const paso = (i: number, extra?: Record<string, string | number>) => ({ '--i': i
 
 export function Servicios() {
   const movimientoReducido = useMovimientoReducido();
+  const { idioma, t } = useIdioma();
   const [activo, setActivo] = useState<Servicio['id']>('web');
   const [automatico, setAutomatico] = useState(true);
   const [encima, setEncima] = useState(false);
@@ -52,11 +54,11 @@ export function Servicios() {
           onAnimationEnd={siguiente}
         >
           <div className="[grid-area:cabeza]">
-            <p className="ceja">// servicios</p>
+            <p className="ceja">{t.servicios.ceja}</p>
             <h2 id="titulo-servicios" className="titulo-seccion">
-              Lo que <span className="text-verde">construimos</span>
+              {t.servicios.titulo.antes}<span className="text-verde">{t.servicios.titulo.verde}</span>
             </h2>
-            <p className="intro-seccion mt-3">Elige un servicio y míralo en acción.</p>
+            <p className="intro-seccion mt-3">{t.servicios.intro}</p>
           </div>
 
           <div className="flex flex-col gap-2 [grid-area:lista]">
@@ -77,16 +79,16 @@ export function Servicios() {
                       </svg>
                     </span>
                     <span>
-                      <span className="block font-titulo text-[1.55rem] leading-tight tracking-[0.02em] uppercase">{s.titulo}</span>
-                      <span className="block text-[0.92rem] text-(--fg-muted)">{s.subtitulo}</span>
+                      <span className="block font-titulo text-[1.55rem] leading-tight tracking-[0.02em] uppercase">{s.titulo[idioma]}</span>
+                      <span className="block text-[0.92rem] text-(--fg-muted)">{s.subtitulo[idioma]}</span>
                     </span>
                   </button>
                   <div className="servicio-mas" id={`mas-${s.id}`}>
                     <div className="min-h-0 overflow-hidden">
                       <div className="grid gap-3 pr-4 pb-5 pl-[calc(1.6rem+40px)] sm:pl-[calc(2rem+46px)]">
-                        <p className="m-0 text-[0.98rem] text-(--fg-muted)">{s.descripcion}</p>
+                        <p className="m-0 text-[0.98rem] text-(--fg-muted)">{s.descripcion[idioma]}</p>
                         <ul className="chequeos">
-                          {s.incluye.map((item) => <li key={item}>{item}</li>)}
+                          {s.incluye[idioma].map((item) => <li key={item}>{item}</li>)}
                         </ul>
                       </div>
                     </div>
@@ -121,13 +123,13 @@ export function Servicios() {
                   href={servicio.repositorio}
                   target="_blank"
                   rel="noopener"
-                  aria-label={`Ver repositorio del ejemplo de ${servicio.titulo.toLowerCase()}`}
+                  aria-label={t.servicios.verRepositorioDe(servicio.titulo[idioma])}
                 >
                   <svg className="size-[18px] flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <circle cx="6" cy="5" r="2.2" /><circle cx="6" cy="19" r="2.2" /><circle cx="18" cy="8" r="2.2" />
                     <path d="M6 7.2v9.6" /><path d="M18 10.2c0 4.2-6 3.6-11 6.8" />
                   </svg>
-                  Ver repositorio <span className="ext" aria-hidden>↗</span>
+                  {t.servicios.verRepositorio} <span className="ext" aria-hidden>↗</span>
                 </a>
               </div>
             </div>
@@ -139,12 +141,14 @@ export function Servicios() {
 }
 
 function BarraVentana({ id }: { id: Servicio['id'] }) {
-  if (id === 'web') return <span className="ventana-url">pasteleria.tudominio.dev</span>;
-  const titulos = { app: 'agenda · flutter run', api: 'terminal · api', db: 'mysql · inventario' };
+  const m = useIdioma().t.servicios.maqueta;
+  if (id === 'web') return <span className="ventana-url">{m.url}</span>;
+  const titulos = { app: m.tituloApp, api: 'terminal · api', db: m.tituloDb };
   return <span className="ventana-titulo">{titulos[id]}</span>;
 }
 
 function Maqueta({ id }: { id: Servicio['id'] }) {
+  const m = useIdioma().t.servicios.maqueta;
   if (id === 'app') {
     return (
       <div className="pa">
@@ -160,7 +164,7 @@ function Maqueta({ id }: { id: Servicio['id'] }) {
           <div className="cel-nav"><span /><span /><span /></div>
         </div>
         <div className="aviso entra max-sm:top-[4%] max-sm:left-1/2 max-sm:w-[min(230px,80%)] max-sm:-translate-x-1/2" style={paso(10)}>
-          <strong>recordatorio</strong>Tu cita es mañana a las 10:30 a. m.
+          <strong>{m.recordatorio}</strong>{m.cita}
         </div>
       </div>
     );
@@ -169,14 +173,14 @@ function Maqueta({ id }: { id: Servicio['id'] }) {
   if (id === 'api') {
     return (
       <div className="terminal">
-        <p><span className="t-prompt">$ </span><span className="tecleado" style={{ '--n': 25 } as React.CSSProperties}>curl -X POST /api/pedidos</span></p>
+        <p><span className="t-prompt">$ </span><span className="tecleado" style={{ '--n': m.curl.length } as React.CSSProperties}>{m.curl}</span></p>
         <p className="entra" style={paso(0)}><span className="t-ok">HTTP/1.1 201 Created</span><span className="t-dim">  · 84 ms</span></p>
         <p className="entra" style={paso(1)}>{'{'}</p>
         <p className="entra" style={paso(2)}>  <span className="t-k">"id"</span>: <span className="t-n">1284</span>,</p>
-        <p className="entra" style={paso(3)}>  <span className="t-k">"cliente"</span>: <span className="t-s">"Pastelería Dulce Hogar"</span>,</p>
-        <p className="entra" style={paso(4)}>  <span className="t-k">"estado"</span>: <span className="t-s">"pagado"</span>,</p>
+        <p className="entra" style={paso(3)}>  <span className="t-k">"{m.cliente}"</span>: <span className="t-s">"{m.nombreCliente}"</span>,</p>
+        <p className="entra" style={paso(4)}>  <span className="t-k">"{m.estado}"</span>: <span className="t-s">"{m.pagado}"</span>,</p>
         <p className="entra" style={paso(5)}>  <span className="t-k">"total"</span>: <span className="t-n">189900</span>,</p>
-        <p className="entra" style={paso(6)}>  <span className="t-k">"moneda"</span>: <span className="t-s">"COP"</span></p>
+        <p className="entra" style={paso(6)}>  <span className="t-k">"{m.moneda}"</span>: <span className="t-s">"COP"</span></p>
         <p className="entra" style={paso(7)}>{'}'}<span className="cursor" /></p>
       </div>
     );
@@ -185,15 +189,16 @@ function Maqueta({ id }: { id: Servicio['id'] }) {
   if (id === 'db') {
     return (
       <div className="terminal" style={{ '--base': '2.15s' } as React.CSSProperties}>
-        <p><span className="t-prompt">mysql&gt; </span><span className="tecleado" style={{ '--n': 22, '--dur': '.8s' } as React.CSSProperties}>SELECT producto, stock</span></p>
-        <p><span className="t-prompt">    -&gt; </span><span className="tecleado" style={{ '--n': 32, '--dur': '1s', '--d': '1.1s' } as React.CSSProperties}>FROM inventario WHERE stock &lt; 5;</span></p>
+        <p><span className="t-prompt">mysql&gt; </span><span className="tecleado" style={{ '--n': m.select.length, '--dur': '.8s' } as React.CSSProperties}>{m.select}</span></p>
+        <p><span className="t-prompt">    -&gt; </span><span className="tecleado" style={{ '--n': m.from.length, '--dur': '1s', '--d': '1.1s' } as React.CSSProperties}>{m.from}</span></p>
         <div className="t-tabla">
-          <div className="t-fila t-cabecera entra" style={paso(0)}><span>producto</span><span>stock</span></div>
-          {[['Torta tres leches', 4], ['Cheesecake de maracuyá', 2], ['Galletas de avena', 3]].map(([producto, stock], i) => (
-            <div key={producto} className="t-fila entra" style={paso(i + 1)}><span>{producto}</span><span className="bajo">{stock}</span></div>
+          <div className="t-fila t-cabecera entra" style={paso(0)}><span>{m.producto}</span><span>stock</span></div>
+          {/* El stock es el mismo en los dos idiomas; solo cambia el nombre del postre */}
+          {m.productos.map((producto, i) => (
+            <div key={producto} className="t-fila entra" style={paso(i + 1)}><span>{producto}</span><span className="bajo">{[4, 2, 3][i]}</span></div>
           ))}
         </div>
-        <p className="t-dim entra" style={paso(4)}>3 filas en 0,012 s<span className="cursor" /></p>
+        <p className="t-dim entra" style={paso(4)}>{m.filas}<span className="cursor" /></p>
       </div>
     );
   }

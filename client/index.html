@@ -17,16 +17,22 @@
       rel="stylesheet"
     />
     <title>AJ · Almeida Aristizabal</title>
-    <!-- Pinta el tema antes de que cargue React, pa' que el modo oscuro no arranque con un flashazo blanco.
-         Misma lógica que src/hooks/useTema.ts -->
+    <!-- Pinta el tema y el idioma antes de que cargue React, pa' que el modo oscuro no arranque con un
+         flashazo blanco ni la página en español pa' después saltar a inglés.
+         Misma lógica que src/hooks/useTema.ts y src/hooks/useIdioma.ts -->
     <script>
       (function () {
-        var tema = null;
-        try { tema = localStorage.getItem('tema'); } catch (e) {}
+        var tema = null, idioma = null;
+        try { tema = localStorage.getItem('tema'); idioma = localStorage.getItem('idioma'); } catch (e) {}
         if (tema !== 'claro' && tema !== 'oscuro') {
           tema = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
         }
+        // Sin elección guardada: español si el navegador está en español, inglés pa' todo lo demás
+        if (idioma !== 'es' && idioma !== 'en') {
+          idioma = /^es\b/i.test(navigator.language || 'es') ? 'es' : 'en';
+        }
         document.documentElement.dataset.tema = tema;
+        document.documentElement.lang = idioma;
       })();
     </script>
   </head>

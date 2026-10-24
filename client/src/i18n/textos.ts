@@ -1,0 +1,326 @@
+import { MAX_MOTIVO } from '../schemas/contacto';
+
+export type Idioma = 'es' | 'en';
+// Pa' los datos que viven en data/: el texto en los dos idiomas, uno al lado del otro
+export type Bilingue<T = string> = Record<Idioma, T>;
+
+// Títulos con una palabra pintada de verde: lo de antes va normal y lo verde en su <span>
+interface TituloVerde {
+  antes: string;
+  verde: string;
+}
+
+// Los textos de la interfaz. El contenido (servicios, proyectos, cotizador…) vive en data/ con su { es, en }
+const es = {
+  navbar: {
+    principal: 'Principal',
+    abrirMenu: 'Abrir menú',
+    cerrarMenu: 'Cerrar menú',
+    contacto: 'Contacto',
+    contactanos: 'Contáctanos',
+    modoOscuro: 'Modo oscuro',
+    otroIdioma: 'Ver en inglés',
+  },
+  hero: {
+    saludo: 'Hola, somos',
+    roles: ['Full Stack Developers', 'Web · Móvil · APIs'],
+    intro:
+      'Construimos aplicaciones web y móviles de punta a punta: base de datos, API e interfaz, con código claro y entregas por etapas.',
+    contactanos: 'Contáctanos',
+    verProyectos: 'Ver proyectos',
+    orbita: 'Tecnologías con las que trabajamos',
+    ejecutar: 'Ejecutar la animación del banner',
+    pista: 'Haz clic para compilar',
+    cinta: 'Stack tecnológico',
+    estados: {
+      enLinea: 'En línea',
+      carga: ['Compilando…', 'Instalando dependencias…', 'Ejecutando pruebas…', '¡Casi listo!'],
+      deploy: '¡Deploy!',
+      recompilando: 'Recompilando…',
+      exito: 'Build exitoso',
+    },
+  },
+  nosotros: {
+    ceja: '// nosotros',
+    titulo: '¿Quiénes somos?',
+    intro:
+      'Somos un equipo de desarrolladores full stack apasionados por transformar ideas complejas en productos digitales eficientes, escalables y atractivos. Combinamos la solidez del desarrollo backend con la interactividad y el diseño del frontend para ofrecer soluciones tecnológicas de extremo a extremo.',
+    tecnologiasDe: (nombre: string) => `Tecnologías de ${nombre}`,
+    descargar: 'Descargar ',
+    cvPronto: 'CV disponible pronto',
+  },
+  servicios: {
+    ceja: '// servicios',
+    titulo: { antes: 'Lo que ', verde: 'construimos' } as TituloVerde,
+    intro: 'Elige un servicio y míralo en acción.',
+    verRepositorio: 'Ver repositorio',
+    verRepositorioDe: (servicio: string) => `Ver repositorio del ejemplo de ${servicio.toLowerCase()}`,
+    // Lo de mentiritas que sale en las ventanitas
+    maqueta: {
+      url: 'pasteleria.tudominio.dev',
+      tituloApp: 'agenda · flutter run',
+      tituloDb: 'mysql · inventario',
+      recordatorio: 'recordatorio',
+      cita: 'Tu cita es mañana a las 10:30 a. m.',
+      curl: 'curl -X POST /api/pedidos',
+      cliente: 'cliente',
+      nombreCliente: 'Pastelería Dulce Hogar',
+      estado: 'estado',
+      pagado: 'pagado',
+      moneda: 'moneda',
+      select: 'SELECT producto, stock',
+      from: 'FROM inventario WHERE stock < 5;',
+      producto: 'producto',
+      productos: ['Torta tres leches', 'Cheesecake de maracuyá', 'Galletas de avena'],
+      filas: '3 filas en 0,012 s',
+    },
+  },
+  proyectos: {
+    ceja: '// proyectos',
+    titulo: 'Algunos de nuestros proyectos',
+    filtrar: 'Filtrar proyectos por tipo',
+    ayuda: 'Filtra por tipo de proyecto.',
+    modoCodigo: { antes: 'En ', fuerte: 'modo código', despues: ' ves el stack técnico de cada caso.' },
+    modoNegocio: { antes: 'En ', fuerte: 'modo negocio', despues: ' ves para quién es cada caso y qué resultado entrega.' },
+    cambiarANegocio: 'Cambiar a modo negocio →',
+    cambiarACodigo: 'Cambiar a modo código →',
+    mostrando: (visibles: number, total: number) => `Mostrando ${visibles} de ${total} proyectos`,
+    ejemplo: 'ejemplo',
+    para: 'para',
+    resultado: 'resultado',
+  },
+  proceso: {
+    ceja: '// proceso',
+    titulo: { antes: 'De la idea a la ', verde: 'producción' } as TituloVerde,
+    intro: 'Cuatro etapas, cada una con un entregable que puedes revisar antes de pasar a la siguiente.',
+    camion: 'Camión de AJ Express rumbo a producción',
+  },
+  cotizador: {
+    ceja: '// cotizador',
+    titulo: { antes: 'Calcula tu proyecto en ', verde: '30 segundos' } as TituloVerde,
+    intro: 'Elige lo que necesitas y obtén al instante un rango de inversión y de tiempo. Sin formularios eternos.',
+    paso1: '¿Qué necesitas construir?',
+    desde: (precio: string) => `desde ${precio}`,
+    inversion: 'Inversión estimada',
+    moneda: 'Moneda',
+    entrega: 'Entrega estimada:',
+    proyecto: 'Proyecto',
+    enviar: 'Enviar esta cotización →',
+    enviado: 'Listo: completa tus datos abajo ↓',
+    reiniciar: 'Reiniciar',
+    aviso: 'Estimación de referencia calculada con proyectos típicos. La propuesta final se confirma después de una breve llamada.',
+    trm: (tasa: string, fecha: string) => `Conversión con la TRM de referencia: 1 USD = $ ${tasa} COP (${fecha}).`,
+    lector: (minimo: string, maximo: string, enPesos: boolean, semanas: string) =>
+      `Inversión estimada entre ${minimo} y ${maximo}${enPesos ? ' pesos' : ''}, entrega en ${semanas}.`,
+    semanas: (minimo: number, maximo: number) => `${minimo}–${maximo} semanas`,
+    // Con este arranque reconocemos un motivo escrito por el cotizador (y no por la persona)
+    prefijo: 'Hola, quiero cotizar:',
+    estimado: 'Estimado del cotizador:',
+  },
+  contacto: {
+    titulo: 'Contáctanos',
+    pregunta: '¿Tienes un proyecto en mente?',
+    intro: 'Cuéntanos qué quieres construir. Te respondemos con preguntas concretas y una propuesta de alcance.',
+    proyecto: 'Proyecto',
+    nombre: 'Nombre',
+    phNombre: 'Tu nombre completo',
+    correo: 'Correo',
+    phCorreo: 'nombre@dominio.com',
+    celular: 'Celular',
+    opcional: 'opcional',
+    phCelular: '300 123 4567',
+    motivo: 'Motivo',
+    phMotivo: 'Ej.: Deseo cotizar una página web para una pastelería que vende varias categorías de productos.',
+    enviar: 'Enviar',
+    enviando: 'Enviando…',
+    privacidad: 'Solo usamos tus datos para responderte.',
+    revisaCampos: 'Revisa los campos marcados.',
+    directo: '¿Prefieres escribirnos directo?',
+    copiar: 'Copiar',
+    copiado: 'Copiado',
+    seleccionalo: 'Selecciónalo',
+    pancarta: '¡ENVIADO!',
+  },
+  // Las claves que devuelve el esquema de Zod (schemas/contacto.ts) traducidas a gente
+  errores: {
+    nombre: 'Escribe tu nombre.',
+    correo: 'Revisa el correo. Ejemplo: nombre@dominio.com',
+    celular: 'Escribe solo el número, con indicativo si es de otro país.',
+    'motivo-corto': 'Cuéntanos un poco más sobre tu proyecto.',
+    'motivo-largo': `Máximo ${MAX_MOTIVO} caracteres.`,
+  },
+  servicio: {
+    exito: '¡Listo! Te respondemos pronto.',
+    lento: 'El servidor se demoró mucho en responder. Intenta de nuevo.',
+    sinConexion: 'No hay conexión con el servidor. Intenta de nuevo.',
+    raro: (status: number) => `El servidor respondió raro (${status}). Intenta más tarde.`,
+  },
+  footer: {
+    arriba: 'volver arriba ↑',
+  },
+  noEncontrada: {
+    camion: 'Camión de AJ Express perdido',
+    texto: 'El camión se perdió: esta página no existe.',
+    volver: 'Volver al inicio',
+  },
+};
+
+export type Textos = typeof es;
+
+const en: Textos = {
+  navbar: {
+    principal: 'Main',
+    abrirMenu: 'Open menu',
+    cerrarMenu: 'Close menu',
+    contacto: 'Contact',
+    contactanos: 'Contact us',
+    modoOscuro: 'Dark mode',
+    otroIdioma: 'View in Spanish',
+  },
+  hero: {
+    saludo: "Hi, we're",
+    roles: ['Full Stack Developers', 'Web · Mobile · APIs'],
+    intro: 'We build web and mobile apps end to end: database, API and interface, with clean code and staged deliveries.',
+    contactanos: 'Contact us',
+    verProyectos: 'See projects',
+    orbita: 'Technologies we work with',
+    ejecutar: 'Play the banner animation',
+    pista: 'Click to compile',
+    cinta: 'Tech stack',
+    estados: {
+      enLinea: 'Online',
+      carga: ['Compiling…', 'Installing dependencies…', 'Running tests…', 'Almost there!'],
+      deploy: 'Deployed!',
+      recompilando: 'Recompiling…',
+      exito: 'Build passed',
+    },
+  },
+  nosotros: {
+    ceja: '// about us',
+    titulo: 'Who we are',
+    intro:
+      "We're a team of full stack developers who love turning complex ideas into efficient, scalable and engaging digital products. We pair solid backend engineering with interactive, well-designed frontends to deliver end-to-end technology solutions.",
+    tecnologiasDe: (nombre: string) => `${nombre}'s tech stack`,
+    descargar: 'Download ',
+    cvPronto: 'CV coming soon',
+  },
+  servicios: {
+    ceja: '// services',
+    titulo: { antes: 'What we ', verde: 'build' },
+    intro: 'Pick a service and see it in action.',
+    verRepositorio: 'View repository',
+    verRepositorioDe: (servicio: string) => `View the ${servicio.toLowerCase()} example repository`,
+    maqueta: {
+      url: 'bakery.yourdomain.dev',
+      tituloApp: 'appointments · flutter run',
+      tituloDb: 'mysql · inventory',
+      recordatorio: 'reminder',
+      cita: 'Your appointment is tomorrow at 10:30 a.m.',
+      curl: 'curl -X POST /api/orders',
+      cliente: 'customer',
+      nombreCliente: 'Sweet Home Bakery',
+      estado: 'status',
+      pagado: 'paid',
+      moneda: 'currency',
+      select: 'SELECT product, stock',
+      from: 'FROM inventory WHERE stock < 5;',
+      producto: 'product',
+      productos: ['Tres leches cake', 'Passion fruit cheesecake', 'Oatmeal cookies'],
+      filas: '3 rows in 0.012 s',
+    },
+  },
+  proyectos: {
+    ceja: '// projects',
+    titulo: 'Some of our projects',
+    filtrar: 'Filter projects by type',
+    ayuda: 'Filter by project type.',
+    modoCodigo: { antes: 'In ', fuerte: 'code mode', despues: ' you see the tech stack behind each case.' },
+    modoNegocio: { antes: 'In ', fuerte: 'business mode', despues: ' you see who each case is for and the result it delivers.' },
+    cambiarANegocio: 'Switch to business mode →',
+    cambiarACodigo: 'Switch to code mode →',
+    mostrando: (visibles: number, total: number) => `Showing ${visibles} of ${total} projects`,
+    ejemplo: 'example',
+    para: 'for',
+    resultado: 'result',
+  },
+  proceso: {
+    ceja: '// process',
+    titulo: { antes: 'From idea to ', verde: 'production' },
+    intro: 'Four stages, each with a deliverable you can review before moving on to the next one.',
+    camion: 'AJ Express truck heading to production',
+  },
+  cotizador: {
+    ceja: '// estimator',
+    titulo: { antes: 'Estimate your project in ', verde: '30 seconds' },
+    intro: 'Pick what you need and instantly get a budget and timeline range. No endless forms.',
+    paso1: 'What do you need to build?',
+    desde: (precio: string) => `from ${precio}`,
+    inversion: 'Estimated budget',
+    moneda: 'Currency',
+    entrega: 'Estimated delivery:',
+    proyecto: 'Project',
+    enviar: 'Send this estimate →',
+    enviado: 'Done: fill in your details below ↓',
+    reiniciar: 'Reset',
+    aviso: 'Reference estimate based on typical projects. The final proposal is confirmed after a short call.',
+    trm: (tasa: string, fecha: string) => `Converted at the reference exchange rate (TRM): 1 USD = $ ${tasa} COP (${fecha}).`,
+    lector: (minimo: string, maximo: string, enPesos: boolean, semanas: string) =>
+      `Estimated budget between ${minimo} and ${maximo}${enPesos ? ' Colombian pesos' : ''}, delivery in ${semanas}.`,
+    semanas: (minimo: number, maximo: number) => `${minimo}–${maximo} weeks`,
+    prefijo: "Hi, I'd like a quote for:",
+    estimado: 'Estimator range:',
+  },
+  contacto: {
+    titulo: 'Contact us',
+    pregunta: 'Got a project in mind?',
+    intro: "Tell us what you want to build. We'll get back to you with specific questions and a scope proposal.",
+    proyecto: 'Project',
+    nombre: 'Name',
+    phNombre: 'Your full name',
+    correo: 'Email',
+    phCorreo: 'name@domain.com',
+    celular: 'Phone',
+    opcional: 'optional',
+    phCelular: '+1 555 123 4567',
+    motivo: 'Message',
+    phMotivo: "E.g.: I'd like a quote for a website for a bakery that sells several product categories.",
+    enviar: 'Send',
+    enviando: 'Sending…',
+    privacidad: 'We only use your details to reply to you.',
+    revisaCampos: 'Please check the highlighted fields.',
+    directo: 'Prefer to email us directly?',
+    copiar: 'Copy',
+    copiado: 'Copied',
+    seleccionalo: 'Select it',
+    pancarta: 'SENT!',
+  },
+  errores: {
+    nombre: 'Please enter your name.',
+    correo: 'Check your email. Example: name@domain.com',
+    celular: 'Enter just the number, with the country code if you are outside Colombia.',
+    'motivo-corto': 'Tell us a bit more about your project.',
+    'motivo-largo': `${MAX_MOTIVO} characters max.`,
+  },
+  servicio: {
+    exito: "Done! We'll get back to you soon.",
+    lento: 'The server took too long to respond. Please try again.',
+    sinConexion: "Couldn't reach the server. Please try again.",
+    raro: (status: number) => `The server sent an unexpected response (${status}). Please try again later.`,
+  },
+  footer: {
+    arriba: 'back to top ↑',
+  },
+  noEncontrada: {
+    camion: 'Lost AJ Express truck',
+    texto: "The truck got lost: this page doesn't exist.",
+    volver: 'Back to home',
+  },
+};
+
+export const TEXTOS: Record<Idioma, Textos> = { es, en };
+
+// Los errores de Zod llegan como clave ('motivo-corto'); los del servidor ya vienen escritos y pasan derechito
+export function traducirError(t: Textos, mensaje: string | undefined): string | undefined {
+  if (!mensaje) return mensaje;
+  return mensaje in t.errores ? t.errores[mensaje as keyof Textos['errores']] : mensaje;
+}

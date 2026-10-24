@@ -32,3 +32,25 @@ describe('modo oscuro', () => {
     expect(screen.getByRole('button', { name: 'Modo oscuro' })).toHaveAttribute('aria-pressed', 'true');
   });
 });
+
+describe('idioma', () => {
+  afterEach(() => {
+    localStorage.clear();
+    document.documentElement.lang = '';
+  });
+
+  it('el botón EN pasa la página a inglés, cambia el lang del <html> y se acuerda', async () => {
+    render(<Navbar temaAzul={false} />);
+    expect(screen.getByRole('link', { name: 'Nosotros' })).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Ver en inglés' }));
+
+    expect(document.documentElement.lang).toBe('en');
+    expect(localStorage.getItem('idioma')).toBe('en');
+    expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument();
+    // Y de vuelta: ahora el botón ofrece español
+    await userEvent.click(screen.getByRole('button', { name: 'View in Spanish' }));
+    expect(document.documentElement.lang).toBe('es');
+    expect(screen.getByRole('link', { name: 'Nosotros' })).toBeInTheDocument();
+  });
+});

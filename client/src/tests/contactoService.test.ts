@@ -59,4 +59,12 @@ describe('servicio de contacto', () => {
     await enviarContacto(datos);
     expect(vi.mocked(fetch).mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal);
   });
+
+  it('en inglés usa sus propios mensajes, aunque el servidor conteste en español', async () => {
+    responder(JSON.stringify({ ok: true, mensaje: 'Recibido' }));
+    expect(await enviarContacto(datos, 'en')).toEqual({ ok: true, mensaje: "Done! We'll get back to you soon." });
+
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
+    expect((await enviarContacto(datos, 'en')).mensaje).toMatch(/Couldn't reach the server/);
+  });
 });
