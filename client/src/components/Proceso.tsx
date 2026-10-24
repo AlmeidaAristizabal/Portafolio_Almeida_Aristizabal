@@ -5,7 +5,7 @@ export function Proceso() {
   return (
     <section id="proceso" aria-labelledby="titulo-proceso">
       <div className="envoltura">
-        <div className="border-t border-(--light-hair) py-[clamp(4rem,9vw,6.5rem)]">
+        <div className="border-t border-(--hair) py-[clamp(4rem,9vw,6.5rem)]">
           <div className="aparecer mb-[clamp(2rem,5vw,3.25rem)] max-w-[720px]">
             <p className="ceja">// proceso</p>
             <h2 id="titulo-proceso" className="titulo-seccion">De la idea a la <span className="text-verde">producción</span></h2>
@@ -22,13 +22,13 @@ export function Proceso() {
                     <span className="commit-punto" aria-hidden />
                     <div className="min-w-0">
                       <div className={`flex flex-wrap gap-x-4 gap-y-1.5 ${esUltima ? 'items-center' : 'items-baseline'}`}>
-                        <span className="font-mono text-[0.92rem] text-pu-500">{etapa.hash}</span>
-                        <h3 className="m-0 font-titulo text-[clamp(1.9rem,2.8vw,2.5rem)] leading-[1.1] font-bold tracking-[0.01em] text-in-600 uppercase">
+                        <span className="font-mono text-[0.92rem] text-(--eyebrow)">{etapa.hash}</span>
+                        <h3 className="m-0 font-titulo text-[clamp(1.9rem,2.8vw,2.5rem)] leading-[1.1] font-bold tracking-[0.01em] text-(--heading) uppercase">
                           {etapa.titulo}
                         </h3>
                         {esUltima && <span className="referencia">HEAD → main</span>}
                       </div>
-                      <p className="mt-2.5 mb-0 max-w-[34rem] text-[clamp(1rem,1.35vw,1.15rem)] leading-[1.65] text-gr-400">{etapa.descripcion}</p>
+                      <p className="mt-2.5 mb-0 max-w-[34rem] text-[clamp(1rem,1.35vw,1.15rem)] leading-[1.65] text-(--fg-muted)">{etapa.descripcion}</p>
                     </div>
                   </li>
                 );

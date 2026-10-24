@@ -17,6 +17,18 @@
       rel="stylesheet"
     />
     <title>AJ · Almeida Aristizabal</title>
+    <!-- Pinta el tema antes de que cargue React, pa' que el modo oscuro no arranque con un flashazo blanco.
+         Misma lógica que src/hooks/useTema.ts -->
+    <script>
+      (function () {
+        var tema = null;
+        try { tema = localStorage.getItem('tema'); } catch (e) {}
+        if (tema !== 'claro' && tema !== 'oscuro') {
+          tema = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'oscuro' : 'claro';
+        }
+        document.documentElement.dataset.tema = tema;
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

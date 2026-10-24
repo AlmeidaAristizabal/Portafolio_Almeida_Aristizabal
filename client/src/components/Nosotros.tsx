@@ -48,10 +48,10 @@ export function Nosotros() {
                 </svg>
                 <FotoRecortada indice={i} nombre={persona.nombre} src={FOTOS[i].src} />
               </div>
-              <h3 className="mt-2 font-titulo text-[clamp(1.6rem,2.8vw,2rem)] leading-tight tracking-[0.03em] text-in-600 uppercase">
+              <h3 className="mt-2 font-titulo text-[clamp(1.6rem,2.8vw,2rem)] leading-tight tracking-[0.03em] text-(--heading) uppercase">
                 {persona.nombre}
               </h3>
-              <p className="m-0 font-mono text-[0.78rem] text-pu-500">{persona.rol}</p>
+              <p className="m-0 font-mono text-[0.78rem] text-(--eyebrow)">{persona.rol}</p>
               <ul className="etiquetas justify-center" aria-label={`Tecnologías de ${persona.nombre.split(' ')[0]}`}>
                 {persona.tecnologias.map((t) => (
                   <li key={t} className="etiqueta">{t}</li>

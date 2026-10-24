@@ -33,25 +33,25 @@ export function Proyectos() {
             </div>
           </div>
           <div className="grid min-w-0 gap-2.5">
-            <p className="m-0 text-[0.95rem] text-gr-400">
+            <p className="m-0 text-[0.95rem] text-(--fg-muted)">
               Filtra por tipo de proyecto.{' '}
               {modo === 'codigo' ? (
-                <>En <strong className="font-semibold text-in-600">modo código</strong> ves el stack técnico de cada caso.</>
+                <>En <strong className="font-semibold text-(--heading)">modo código</strong> ves el stack técnico de cada caso.</>
               ) : (
-                <>En <strong className="font-semibold text-in-600">modo negocio</strong> ves para quién es cada caso y qué resultado entrega.</>
+                <>En <strong className="font-semibold text-(--heading)">modo negocio</strong> ves para quién es cada caso y qué resultado entrega.</>
               )}
             </p>
             <button
               type="button"
               onClick={() => setModo((m) => (m === 'codigo' ? 'negocio' : 'codigo'))}
-              className="cursor-pointer justify-self-start border-0 bg-transparent py-1 text-base font-bold text-pu-500 underline-offset-4 hover:text-pu-400 hover:underline"
+              className="cursor-pointer justify-self-start border-0 bg-transparent py-1 text-base font-bold text-(--eyebrow) underline-offset-4 hover:text-(--acento-hover) hover:underline"
             >
               {modo === 'codigo' ? 'Cambiar a modo negocio →' : 'Cambiar a modo código →'}
             </button>
           </div>
         </div>
 
-        <p className="mb-7 font-mono text-[0.8rem] text-gr-400" aria-live="polite">
+        <p className="mb-7 font-mono text-[0.8rem] text-(--fg-muted)" aria-live="polite">
           Mostrando {visibles.length} de {PROYECTOS.length} proyectos
         </p>
 
