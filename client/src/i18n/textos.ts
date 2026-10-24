@@ -134,10 +134,6 @@ const es = {
     enviando: 'Enviando…',
     privacidad: 'Solo usamos tus datos para responderte.',
     revisaCampos: 'Revisa los campos marcados.',
-    directo: '¿Prefieres escribirnos directo?',
-    copiar: 'Copiar',
-    copiado: 'Copiado',
-    seleccionalo: 'Selecciónalo',
     pancarta: '¡ENVIADO!',
   },
   // Las claves que devuelve el esquema de Zod (schemas/contacto.ts) traducidas a gente
@@ -286,10 +282,6 @@ const en: Textos = {
     enviando: 'Sending…',
     privacidad: 'We only use your details to reply to you.',
     revisaCampos: 'Please check the highlighted fields.',
-    directo: 'Prefer to email us directly?',
-    copiar: 'Copy',
-    copiado: 'Copied',
-    seleccionalo: 'Select it',
     pancarta: 'SENT!',
   },
   errores: {

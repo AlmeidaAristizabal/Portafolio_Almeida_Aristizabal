@@ -1,10 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { CORREO_CONTACTO, ENLACE_GITHUB, ENLACE_LINKEDIN } from '../data/contenido';
 import { FOTO_ELEIRA, FOTO_JUAN } from '../data/fotos';
 import { volarAvioneta } from '../efectos/avionetaEnviado';
-import { useAvisoTemporal } from '../hooks/useAvisoTemporal';
 import { useIdioma } from '../hooks/useIdioma';
 import { useMovimientoReducido } from '../hooks/useMovimientoReducido';
 import { esquemaContacto, MAX_MOTIVO, OPCIONES_PROYECTO, type DatosContacto } from '../schemas/contacto';
@@ -29,7 +27,6 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
   const botonEnviar = useRef<HTMLButtonElement>(null);
   const fotoJuan = useRef<HTMLImageElement>(null);
   const fotoEleira = useRef<HTMLImageElement>(null);
-  const tarjeta = useRef<HTMLDivElement>(null);
   const cancelarVuelo = useRef<(() => void) | null>(null);
   // En un ref pa' que cambiar la preferencia de movimiento no vuelva a disparar el efecto del cotizador
   const reducidoRef = useRef(movimientoReducido);
@@ -87,7 +84,8 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
     cancelarVuelo.current = volarAvioneta(
       {
         boton: botonEnviar.current, seccion: seccion.current, formulario: formulario.current,
-        fotoJuan: fotoJuan.current, fotoEleira: fotoEleira.current, tarjeta: tarjeta.current,
+        // Ya no hay tarjeta del correo: la avioneta igual sabe volar sin ella
+        fotoJuan: fotoJuan.current, fotoEleira: fotoEleira.current, tarjeta: null,
       },
       () => { setVolando(false); cancelarVuelo.current = null; reset(); },
       t.contacto.pancarta,
@@ -110,17 +108,18 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
         {t.contacto.titulo}
       </h2>
 
-      <div className="envoltura relative z-[1] grid flex-1 grid-cols-1 gap-0 min-[861px]:grid-cols-[minmax(0,1fr)_minmax(0,400px)] min-[861px]:gap-[clamp(2rem,5vw,4rem)] min-[1024px]:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
-        <div className="flex min-w-0 flex-col justify-center gap-7 pt-[clamp(4.5rem,10vh,6.5rem)] pb-10 min-[861px]:pb-[clamp(3rem,7vh,5rem)]">
-          <div>
-            <p className="m-0 font-titulo text-[clamp(2.6rem,5vw,4rem)] leading-none font-semibold tracking-[0.01em] text-balance text-white uppercase">
-              {t.contacto.pregunta}
-            </p>
-            <p className="mt-3 mb-0 max-w-[50ch] text-in-100">
-              {t.contacto.intro}
-            </p>
-          </div>
+      <div className="envoltura relative z-[1] grid flex-1 grid-cols-1 gap-0 min-[861px]:grid-cols-[minmax(0,1fr)_minmax(0,400px)] min-[861px]:gap-x-[clamp(2rem,5vw,4rem)] min-[1024px]:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
+        {/* La pregunta va a lo ancho, encima del formulario y de las fotos */}
+        <div className="min-w-0 pt-[clamp(4.5rem,10vh,6.5rem)] min-[861px]:col-span-2">
+          <p className="m-0 font-titulo text-[clamp(2.6rem,6vw,4.75rem)] leading-none font-semibold tracking-[0.01em] text-white uppercase">
+            {t.contacto.pregunta}
+          </p>
+          <p className="mt-3 mb-0 max-w-[50ch] text-in-100">
+            {t.contacto.intro}
+          </p>
+        </div>
 
+        <div className="flex min-w-0 flex-col justify-center gap-7 pt-7 pb-10 min-[861px]:pb-[clamp(3rem,7vh,5rem)]">
           <form ref={formulario} onSubmit={(e) => void handleSubmit(alEnviar)(e)} noValidate className="flex flex-col gap-4 min-[861px]:max-w-[600px]">
             <Fila etiqueta={<span id="etiqueta-tipo">{t.contacto.proyecto}</span>}>
               <div className="flex flex-wrap gap-2" role="radiogroup" aria-labelledby="etiqueta-tipo">
@@ -190,8 +189,7 @@ export function Contacto({ cotizacion }: { cotizacion: CotizacionElegida | null 
           </form>
         </div>
 
-        <div className="aparecer relative flex min-w-0 flex-col pt-0 min-[861px]:pt-[clamp(4.5rem,10vh,6.5rem)]">
-          <TarjetaCorreo ref={tarjeta} />
+        <div className="aparecer relative flex min-w-0 flex-col min-[861px]:pt-7">
           <div className="personas-contacto pointer-events-none relative mt-6 h-[260px] flex-none sm:h-80 min-[861px]:mt-0 min-[861px]:h-auto min-[861px]:min-h-[340px] min-[861px]:flex-1" aria-hidden>
             <img ref={fotoEleira} src={FOTO_ELEIRA.src} alt="" width={FOTO_ELEIRA.ancho} height={FOTO_ELEIRA.alto} loading="lazy"
               className="foto-c-eleira absolute right-[6%] bottom-0 z-[1] h-auto max-h-full w-[40%] max-w-none object-contain object-right-bottom min-[861px]:right-0 min-[861px]:w-[53%]" />
@@ -224,49 +222,6 @@ function Fila({ etiqueta, error, idError, extra, children }: PropsFila) {
             {extra}
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function TarjetaCorreo({ ref }: { ref: React.Ref<HTMLDivElement> }) {
-  const { t } = useIdioma();
-  // Guardamos la clave y no el texto: si cambian el idioma con el aviso puesto, también se traduce
-  const [aviso, avisar] = useAvisoTemporal<'copiar' | 'copiado' | 'seleccionalo'>('copiar', 2000);
-  const correo = useRef<HTMLSpanElement>(null);
-
-  // Si el portapapeles no deja, al menos dejamos el correo seleccionado pa' que lo copien a mano
-  const seleccionar = () => {
-    if (!correo.current) return;
-    const rango = document.createRange();
-    rango.selectNodeContents(correo.current);
-    const sel = window.getSelection();
-    sel?.removeAllRanges();
-    sel?.addRange(rango);
-  };
-  const copiar = async () => {
-    try {
-      await navigator.clipboard.writeText(CORREO_CONTACTO);
-      avisar('copiado');
-    } catch {
-      seleccionar();
-      avisar('seleccionalo');
-    }
-  };
-
-  return (
-    <div
-      ref={ref}
-      className="relative z-[3] grid w-auto gap-3.5 self-stretch rounded-2xl border border-(--dark-line) bg-(--dark-surface) px-5 py-5 backdrop-blur-[10px] min-[861px]:w-[min(100%,380px)] min-[861px]:self-end"
-    >
-      <p className="m-0 font-mono text-[0.76rem] text-in-100">{t.contacto.directo}</p>
-      <div className="flex flex-wrap items-center justify-between gap-2.5">
-        <span ref={correo} className="min-w-0 font-mono text-[1.02rem] break-all text-white select-all">{CORREO_CONTACTO}</span>
-        <button type="button" className="boton boton-fantasma boton-sm" onClick={copiar}>{t.contacto[aviso]}</button>
-      </div>
-      <div className="flex flex-wrap gap-2.5">
-        <a className="boton boton-fantasma boton-sm" href={ENLACE_GITHUB} target="_blank" rel="noopener">GitHub ↗</a>
-        <a className="boton boton-fantasma boton-sm" href={ENLACE_LINKEDIN} target="_blank" rel="noopener">LinkedIn ↗</a>
       </div>
     </div>
   );
