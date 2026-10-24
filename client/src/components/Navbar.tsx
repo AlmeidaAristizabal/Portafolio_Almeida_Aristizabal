@@ -59,7 +59,7 @@ export function Navbar({ temaAzul }: { temaAzul: boolean }) {
           </li>
         </ul>
 
-        <a href="#contacto" className="boton boton-primario boton-sm hidden min-[861px]:order-2 min-[861px]:inline-flex">
+        <a href="#contacto" className="enlace-nav block border-b border-(--dark-hair) py-3 text-[1.05rem] font-semibold text-in-100 no-underline hover:text-white min-[861px]:border-0 min-[861px]:py-0">
           {t.navbar.contactanos}
         </a>
       </nav>
