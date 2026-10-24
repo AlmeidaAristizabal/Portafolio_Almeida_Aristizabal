@@ -457,8 +457,6 @@ button.nucleo { cursor: pointer; border: 0; padding: 0; }
   background: linear-gradient(165deg, var(--card-from) 0%, var(--card-to) 70%);
   box-shadow: 0 18px 40px -18px var(--card-shadow); transition: box-shadow 0.25s ease, translate 0.25s ease;
 }
-.proyecto[data-cat='landing'] { --card-from: var(--color-pu-400); --card-to: var(--color-pu-600); }
-.proyecto[data-cat='app'] { --card-from: var(--color-in-500); --card-to: var(--color-in-600); }
 .proyecto:hover { translate: 0 -4px; box-shadow: 0 0 0 2px var(--color-bl-200), 0 24px 44px -16px var(--ring-shadow); }
 .vidrio {
   position: relative; overflow: hidden; aspect-ratio: 16 / 10; border-radius: 14px;
