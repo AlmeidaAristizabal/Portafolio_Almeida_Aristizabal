@@ -108,7 +108,6 @@ const es = {
     enviar: 'Enviar esta cotización →',
     enviado: 'Listo: completa tus datos abajo ↓',
     reiniciar: 'Reiniciar',
-    aviso: 'Estimación de referencia calculada con proyectos típicos. La propuesta final se confirma después de una breve llamada.',
     trm: (tasa: string, fecha: string) => `Conversión con la TRM de referencia: 1 USD = $ ${tasa} COP (${fecha}).`,
     lector: (minimo: string, maximo: string, enPesos: boolean, semanas: string) =>
       `Inversión estimada entre ${minimo} y ${maximo}${enPesos ? ' pesos' : ''}, entrega en ${semanas}.`,
@@ -262,7 +261,6 @@ const en: Textos = {
     enviar: 'Send this estimate →',
     enviado: 'Done: fill in your details below ↓',
     reiniciar: 'Reset',
-    aviso: 'Reference estimate based on typical projects. The final proposal is confirmed after a short call.',
     trm: (tasa: string, fecha: string) => `Converted at the reference exchange rate (TRM): 1 USD = $ ${tasa} COP (${fecha}).`,
     lector: (minimo: string, maximo: string, enPesos: boolean, semanas: string) =>
       `Estimated budget between ${minimo} and ${maximo}${enPesos ? ' Colombian pesos' : ''}, delivery in ${semanas}.`,
