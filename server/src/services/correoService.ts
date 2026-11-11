@@ -79,10 +79,17 @@ async function crearCartero(): Promise<Cartero> {
 
 function obtenerCartero(): Promise<Cartero> {
   // Si falla (ej. sin internet pa' crear la cuenta de prueba), no lo guardamos y se reintenta la próxima vez
-  cartero ??= crearCartero().catch((error: unknown) => {
-    cartero = null;
-    throw error;
-  });
+  cartero ??= crearCartero().then(
+    (nuevo) => {
+      // La consola es un salvavidas, no un trabajo fijo: al siguiente correo se le vuelve a tocar la puerta a Ethereal
+      if (nuevo.modo === 'consola') cartero = null;
+      return nuevo;
+    },
+    (error: unknown) => {
+      cartero = null;
+      throw error;
+    },
+  );
   return cartero;
 }
 

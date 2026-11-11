@@ -26,9 +26,15 @@ export async function recibirContacto(req: Request, res: Response, next: NextFun
   try {
     // Primero se guarda: si Gmail se pone bravo, el mensaje igual no se pierde
     await guardarContacto(resultado.data);
-    await enviarCorreoContacto(resultado.data);
-    return res.status(201).json(RESPUESTA_EXITO);
   } catch (error) {
     return next(error);
   }
+
+  try {
+    await enviarCorreoContacto(resultado.data);
+  } catch (error) {
+    // El mensaje ya está en contactos.json: decirle "error" al usuario solo lo pone a mandarlo dos veces
+    console.error('[correo] El mensaje se guardó, pero el correo no salió:', error);
+  }
+  return res.status(201).json(RESPUESTA_EXITO);
 }

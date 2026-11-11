@@ -1,8 +1,9 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { guardarContacto, leerContactos } from '../src/services/contactoRepositorio.js';
+import { fileURLToPath } from 'node:url';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { guardarContacto, leerContactos, rutaArchivo } from '../src/services/contactoRepositorio.js';
 
 const mensaje = {
   proyecto: 'landing' as const,
@@ -57,5 +58,23 @@ describe('repositorio de contactos', () => {
     // Y la fila no se queda trancada por el error
     await writeFile(ruta, '[]');
     await expect(guardarContacto(mensaje)).resolves.toMatchObject({ nombre: 'Juan Pablo Almeida' });
+  });
+
+  it('si el archivo es JSON pero no una lista, falla con un error claro y no lo toca', async () => {
+    await mkdir(path.dirname(ruta), { recursive: true });
+    await writeFile(ruta, '{"contactos":[]}');
+
+    await expect(guardarContacto(mensaje)).rejects.toThrow('debería tener una lista');
+    expect(await readFile(ruta, 'utf8')).toBe('{"contactos":[]}');
+  });
+
+  it('sin RUTA_CONTACTOS guarda en server/datos, arranquen el server desde donde lo arranquen', () => {
+    delete process.env.RUTA_CONTACTOS;
+    // Como si alguien corriera el server parado en la raíz del repo (o en cualquier otro lado)
+    vi.spyOn(process, 'cwd').mockReturnValue(tmpdir());
+
+    const carpetaServer = fileURLToPath(new URL('../', import.meta.url));
+    expect(rutaArchivo()).toBe(path.join(carpetaServer, 'datos', 'contactos.json'));
+    vi.restoreAllMocks();
   });
 });

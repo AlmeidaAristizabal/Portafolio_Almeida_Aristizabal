@@ -113,13 +113,15 @@ describe('POST /api/contacto', () => {
     expect(enviarCorreoContacto).not.toHaveBeenCalled();
   });
 
-  it('responde 500 sin tumbarse si el correo falla', async () => {
+  it('si el correo falla pero ya se guardó, responde éxito pa\' que no lo manden dos veces', async () => {
     vi.mocked(enviarCorreoContacto).mockRejectedValueOnce(new Error('SMTP caído'));
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const respuesta = await request(app).post('/api/contacto').send(mensajeValido);
 
-    expect(respuesta.status).toBe(500);
-    expect(respuesta.body.ok).toBe(false);
+    expect(respuesta.status).toBe(201);
+    expect(respuesta.body.ok).toBe(true);
+    expect(guardarContacto).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('el correo no salió'), expect.any(Error));
   });
 });

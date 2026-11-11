@@ -64,6 +64,26 @@ describe('servicio de correo', () => {
     expect(console.log).toHaveBeenCalledWith(expect.stringContaining('Quiero una landing para mi negocio.'));
   });
 
+  it('después de caer en la consola, el siguiente correo vuelve a intentar con Ethereal', async () => {
+    process.env.NODE_ENV = 'development';
+    vi.useFakeTimers();
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const nodemailer = (await import('nodemailer')).default;
+    // La primera vez Ethereal se cuelga (un bajón de internet); la segunda ya contesta
+    vi.mocked(nodemailer.createTestAccount).mockReturnValueOnce(new Promise(() => {}));
+    const { enviarCorreoContacto, LIMITE_ETHEREAL_MS } = await import('../src/services/correoService.js');
+
+    const primero = enviarCorreoContacto(mensaje);
+    await vi.advanceTimersByTimeAsync(LIMITE_ETHEREAL_MS);
+    await primero;
+    vi.useRealTimers();
+    sendMail.mockClear();
+
+    await enviarCorreoContacto(mensaje);
+
+    expect(sendMail).toHaveBeenCalledWith(expect.objectContaining({ to: 'prueba@ethereal.email' }));
+  });
+
   it('en producción sin .env falla en vez de fingir que envió', async () => {
     process.env.NODE_ENV = 'production';
     const { enviarCorreoContacto } = await import('../src/services/correoService.js');
