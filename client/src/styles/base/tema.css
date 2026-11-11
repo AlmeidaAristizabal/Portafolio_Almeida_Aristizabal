@@ -1,0 +1,88 @@
+/* Los colores de toda la página. Tailwind se encarga de lo sencillo con sus clases; aquí van las
+   variables que se cambian solas según el modo (claro u oscuro) o según la sección donde caigan */
+
+:root {
+  /* Los mismos tonos de la paleta, pero con transparencia pa' brillos, sombras y vidrios */
+  --glow: rgb(183 158 255 / 0.55);
+  --halo: rgb(86 0 184 / 0.55);
+  --pu-400-a: rgb(125 32 255 / 0.55);
+  --in-500-a: rgb(0 21 193 / 0.5);
+  --header-bg: rgb(47 0 107 / 0.88);
+  --header-bg-b: rgb(0 29 56 / 0.9);
+  --card-shadow: rgb(47 0 107 / 0.45);
+  --win-shadow: rgb(0 29 56 / 0.7);
+  --ring-shadow: rgb(0 130 221 / 0.4);
+  --focus-glow: rgb(0 130 221 / 0.35);
+  --glass-hi: rgb(255 255 255 / 0.16);
+  --glass-lo: rgb(255 255 255 / 0.04);
+  --glass-bd: rgb(255 255 255 / 0.24);
+  --dark-line: rgb(199 200 255 / 0.34);
+  --dark-hair: rgb(199 200 255 / 0.16);
+  --dark-surface: rgb(255 255 255 / 0.06);
+  --dark-surface-2: rgb(255 255 255 / 0.12);
+  --field-bd: rgb(199 200 255 / 0.6);
+  --field-ph: rgb(199 200 255 / 0.62);
+  --light-hair: rgb(0 7 107 / 0.12);
+  --glow-b: rgb(95 167 255 / 0.55);
+  --ring-b: rgb(176 205 255 / 0.4);
+  --halo-b: rgb(0 94 162 / 0.55);
+  --bl-300-a: rgb(0 130 221 / 0.45);
+  --ref-bg: rgb(255 255 255 / 0.45);
+
+  /* Así se ve todo en una sección clara, que es lo normal */
+  --fg: var(--color-bl-600);
+  --fg-muted: var(--color-gr-400);
+  --heading: var(--color-in-600);
+  --eyebrow: var(--color-pu-500);
+  --line: var(--color-in-100);
+  --hair: var(--light-hair);
+  --tag-bg: var(--color-pu-50);
+  --tag-fg: var(--color-pu-600);
+  --tag-bd: var(--color-pu-100);
+
+  /* Lo que se apaga cuando prenden el modo oscuro */
+  --fondo: var(--color-bl-50);
+  --superficie: #fff;
+  --acento-hover: var(--color-pu-400);
+  --radio-bd: var(--color-gr-200);
+  --marcada-bg: var(--color-pu-50);
+  --marcada-anillo: var(--color-pu-100);
+  --ref-fg: var(--color-bl-400);
+}
+
+/* Modo oscuro (useTema le pone el data-tema al <html>). Las secciones que ya nacieron oscuras
+   ni se enteran; solo se apagan las claras: el fondo, las tarjetas blancas y sus letras */
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+  --fg: var(--color-in-50);
+  --fg-muted: var(--color-in-100);
+  --heading: #fff;
+  --eyebrow: var(--color-pu-200);
+  --line: var(--dark-line);
+  --hair: var(--dark-hair);
+  --tag-bg: var(--dark-surface-2);
+  --tag-fg: var(--color-pu-50);
+  --tag-bd: var(--dark-hair);
+  --fondo: #0d0822;
+  --superficie: #18113a;
+  --acento-hover: var(--color-pu-100);
+  --radio-bd: var(--dark-line);
+  --marcada-bg: rgb(86 0 184 / 0.32);
+  --marcada-anillo: rgb(152 107 255 / 0.35);
+  --ref-bg: var(--dark-surface);
+  --ref-fg: var(--color-bl-100);
+}
+
+/* Póngale .oscuro a una sección o tarjeta y los títulos, etiquetas y líneas se acomodan solitos */
+.oscuro {
+  --fg: var(--color-in-50);
+  --fg-muted: var(--color-in-100);
+  --heading: #fff;
+  --eyebrow: var(--color-pu-200);
+  --line: var(--dark-line);
+  --hair: var(--dark-hair);
+  --tag-bg: var(--dark-surface-2);
+  --tag-fg: var(--color-pu-50);
+  --tag-bd: var(--dark-hair);
+  color: var(--fg);
+}

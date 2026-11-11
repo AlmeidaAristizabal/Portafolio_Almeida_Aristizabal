@@ -1,0 +1,38 @@
+/* Proceso: los pasos pintados como un historial de git, con su rayita que los une */
+.commit { position: relative; display: flex; gap: 1.5rem; padding-bottom: 2.75rem; }
+.commit::before { content: ''; position: absolute; left: 13px; top: 34px; bottom: -6px; width: 2px; background: var(--line); }
+/* El último paso no tiene rayita pa' abajo (no hay pa' dónde seguir) y su punto va relleno: llegamos */
+.commit:last-child { padding-bottom: 0; }
+.commit:last-child::before { display: none; }
+.commit-punto { position: relative; z-index: 1; flex: none; width: 28px; height: 28px; margin-top: 6px; border: 3px solid var(--color-pu-500); border-radius: 50%; background: var(--fondo); }
+.commit:last-child .commit-punto { background: var(--color-pu-500); box-shadow: 0 0 0 6px var(--marcada-anillo); }
+.referencia { font-family: var(--font-mono); font-size: 0.82rem; padding: 0.15rem 0.75rem; border-radius: 999px; border: 1.5px solid var(--color-bl-300); color: var(--ref-fg); background: var(--ref-bg); }
+
+/* El camión AJ Express: llantas que giran, cabina que rebota, carretera que corre, humo y luces.
+   fill-box hace que cada pieza gire sobre su propio centro y no sobre la esquina del SVG */
+.camion-fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+.aj-camion * { transform-box: fill-box; }
+.aj-llanta { transform-origin: center; animation: aj-girar 0.55s linear infinite; }
+.aj-cuerpo { animation: aj-rebotar 0.42s ease-in-out infinite; }
+.aj-carretera { animation: aj-carretera 0.4s linear infinite; }
+.aj-velocidad { animation: aj-velocidad 0.9s ease-out infinite; }
+.aj-humo { transform-origin: center; animation: aj-humo 1.2s ease-out infinite; }
+.aj-luz { animation: aj-luz 1.6s ease-in-out infinite; }
+@keyframes aj-girar { to { transform: rotate(360deg); } }
+@keyframes aj-rebotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes aj-carretera { to { stroke-dashoffset: 64; } }
+@keyframes aj-velocidad { 0% { transform: translateX(24px); opacity: 0; } 35% { opacity: 1; } 100% { transform: translateX(-40px); opacity: 0; } }
+@keyframes aj-humo { 0% { transform: translate(0, 0) scale(0.4); opacity: 0.75; } 100% { transform: translate(-48px, -20px) scale(1.7); opacity: 0; } }
+@keyframes aj-luz { 0%, 100% { opacity: 0.28; } 50% { opacity: 0.5; } }
+/* Y cuando uno baja hasta él, el camión entra manejando desde la izquierda */
+@keyframes entrar-manejando { from { translate: -22% 0; opacity: 0.3; } to { translate: 0 0; opacity: 1; } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .camion-fig { animation: entrar-manejando linear both; animation-timeline: view(); animation-range: entry 0% entry 65%; }
+  }
+}
+
+/* Movimiento reducido: el camión se queda parqueado */
+@media (prefers-reduced-motion: reduce) {
+  .aj-llanta, .aj-cuerpo, .aj-carretera, .aj-velocidad, .aj-humo, .aj-luz { animation: none; }
+}

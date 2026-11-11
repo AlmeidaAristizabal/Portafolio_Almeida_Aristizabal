@@ -1,0 +1,138 @@
+/* Servicios: el acordeón de la izquierda y la maqueta animada de la derecha */
+.seccion-servicios { position: relative; overflow: hidden; background: var(--color-in-600); }
+/* Una nube de luz que se pasea despacito por el fondo pa' que la sección no se vea plana */
+.seccion-servicios::before {
+  content: ''; position: absolute; top: -25%; right: -15%; width: 65%; height: 90%; pointer-events: none;
+  background: radial-gradient(closest-side, var(--in-500-a), transparent);
+  animation: deriva 18s ease-in-out infinite alternate;
+}
+/* Cada servicio del acordeón. El .activo es el que está abierto */
+.servicio { position: relative; overflow: hidden; border-radius: 14px; border: 1px solid transparent; transition: background-color 0.25s ease, border-color 0.25s ease; }
+.servicio:hover { background: var(--dark-surface); }
+.servicio.activo { background: var(--dark-surface-2); border-color: var(--line); }
+.servicio-tab { color: var(--fg-muted); transition: color 0.25s ease; }
+.servicio:hover .servicio-tab, .servicio.activo .servicio-tab { color: #fff; }
+.servicio-icono { background: var(--dark-surface-2); color: var(--color-pu-200); transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
+.servicio.activo .servicio-icono { background: linear-gradient(140deg, var(--color-pu-400), var(--color-in-400)); color: #fff; box-shadow: 0 0 22px var(--glow); }
+.servicio.activo .servicio-icono svg { animation: empujon 0.6s ease both; }
+/* El truco del acordeón: height: auto no se deja animar, pero grid-template-rows de 0fr a 1fr sí.
+   Así abre suavecito sin medir alturas con JavaScript. El visibility es pa' que el Tab no se meta a lo que está cerrado */
+.servicio-mas { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows 0.35s ease, visibility 0s linear 0.35s; }
+.servicio.activo .servicio-mas { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows 0.35s ease; }
+/* La rayita de abajo que se va llenando: cuando llega al final, pasa solito al siguiente servicio.
+   Si el usuario toca uno, se acaba el modo automático y la rayita se esconde */
+.servicio-progreso { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--dark-hair); opacity: 0; }
+.servicio.activo .servicio-progreso { opacity: 1; }
+.servicio-progreso::after { content: ''; display: block; width: 100%; height: 100%; background: var(--color-bl-200); transform: scaleX(0); transform-origin: left; }
+.automatico .servicio.activo .servicio-progreso::after { animation: llenar 7s linear forwards; }
+.automatico.pausado .servicio-progreso::after { animation-play-state: paused; }
+.servicios:not(.automatico) .servicio-progreso { display: none; }
+
+/* Las piezas de la maqueta van entrando en fila: la que tiene --i más grande espera más */
+.entra { animation: brotar 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 110ms + var(--base, 120ms)); }
+
+/* La ventanita de navegador que encierra cada maqueta, con sus tres bolitas de colores */
+.ventana { border-radius: 16px; overflow: hidden; background: var(--color-bl-600); border: 1px solid var(--line); box-shadow: 0 30px 60px -30px var(--win-shadow); }
+.ventana-barra { display: flex; align-items: center; gap: 0.45rem; padding: 0.7rem 1rem; border-bottom: 1px solid var(--hair); font-family: var(--font-mono); font-size: 0.76rem; color: var(--color-in-100); }
+.ventana-barra i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.ventana-barra i:nth-child(1) { background: var(--color-pu-300); }
+.ventana-barra i:nth-child(2) { background: var(--color-in-200); }
+.ventana-barra i:nth-child(3) { background: var(--color-bl-200); }
+.ventana-url { margin-left: 0.75rem; flex: 0 1 280px; min-width: 0; padding: 0.25rem 0.75rem; border-radius: 999px; background: var(--dark-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ventana-titulo { margin-left: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ventana-cuerpo { position: relative; height: clamp(300px, 32vw, 380px); padding: clamp(1rem, 2.5vw, 1.5rem); overflow: hidden; }
+
+/* Maqueta de página web: menú, título, imagen y una grilla de tarjetas. Puro rectángulo, cero texto */
+.pw { display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 1rem; height: 100%; }
+.pw-nav { display: flex; align-items: center; justify-content: space-between; }
+.pw-logo { display: block; width: 22%; height: 10px; border-radius: 5px; background: var(--color-pu-200); }
+.pw-enlaces { display: flex; gap: 0.6rem; }
+.pw-enlaces span { display: block; width: 34px; height: 6px; border-radius: 3px; background: var(--dark-line); }
+.pw-hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1rem; align-items: stretch; }
+.pw-texto { display: grid; gap: 0.55rem; align-content: center; }
+.pw-texto span { display: block; border-radius: 4px; }
+.pw-texto .t1 { height: 14px; width: 90%; background: #fff; }
+.pw-texto .t2 { height: 14px; width: 62%; background: #fff; }
+.pw-texto .t3 { height: 7px; width: 80%; background: var(--dark-line); }
+.pw-texto .boton-m { margin-top: 0.3rem; height: 22px; width: 42%; border-radius: 999px; background: var(--color-pu-400); }
+.pw-img { display: block; min-height: 72px; border-radius: 10px; background: linear-gradient(150deg, var(--color-pu-300), var(--color-in-400)); }
+.pw-grilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.7rem; min-height: 0; }
+.pw-grilla span { position: relative; overflow: hidden; border-radius: 8px; background: var(--dark-surface-2); border: 1px solid var(--hair); }
+.pw-grilla span::before { content: ''; position: absolute; inset: 0 0 38% 0; background: linear-gradient(160deg, var(--color-in-300), var(--color-pu-500)); }
+.pw-grilla span:nth-child(2)::before { background: linear-gradient(160deg, var(--color-pu-200), var(--color-pu-400)); }
+.pw-grilla span:nth-child(3)::before { background: linear-gradient(160deg, var(--color-bl-200), var(--color-in-500)); }
+.pw-grilla span:nth-child(4)::before { background: linear-gradient(160deg, var(--color-pu-300), var(--color-in-400)); }
+.pw-grilla span::after { content: ''; position: absolute; left: 12%; right: 35%; bottom: 16%; height: 5px; border-radius: 3px; background: var(--dark-line); }
+
+/* Maqueta de app: el celular, los chips de Android/iOS y la notificación que se asoma */
+.pa { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; gap: 1.5rem; }
+.so-chips { display: grid; gap: 0.6rem; list-style: none; margin: 0; padding: 0; }
+.so-chips li {
+  display: flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.75rem; border-radius: 999px;
+  background: var(--dark-surface-2); border: 1px solid var(--hair); font-family: var(--font-mono); font-size: 0.74rem; color: var(--color-in-50);
+}
+.so-chips li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--color-bl-200); box-shadow: 0 0 8px var(--color-bl-200); }
+.cel {
+  position: relative; height: 100%; aspect-ratio: 9 / 17.5; max-width: 100%; border-radius: 22px;
+  border: 2px solid var(--dark-line); background: var(--color-in-600); padding: 12% 7% 6%;
+  display: flex; flex-direction: column; gap: 0.55rem;
+}
+.cel-titulo { display: block; height: 9px; width: 55%; border-radius: 4px; background: #fff; margin-bottom: 0.2rem; }
+.cel-tarjeta { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 0.45rem; padding: 0.45rem; border-radius: 10px; background: var(--dark-surface-2); }
+.cel-tarjeta i { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(140deg, var(--color-pu-200), var(--color-in-300)); }
+.cel-tarjeta b { display: grid; gap: 4px; }
+.cel-tarjeta b::before, .cel-tarjeta b::after { content: ''; height: 5px; border-radius: 3px; background: var(--dark-line); }
+.cel-tarjeta b::before { width: 85%; background: var(--color-in-50); }
+.cel-tarjeta b::after { width: 55%; }
+.cel-tarjeta em { font-style: normal; font-family: var(--font-mono); font-size: 0.6rem; color: var(--color-bl-100); }
+.cel-nav { margin-top: auto; display: flex; justify-content: space-around; }
+.cel-nav span { width: 16px; height: 16px; border-radius: 5px; background: var(--dark-line); }
+.cel-nav span:first-child { background: var(--color-pu-200); }
+.aviso {
+  position: absolute; top: 8%; left: calc(50% + 40px); width: min(210px, 46%); padding: 0.6rem 0.8rem; border-radius: 12px;
+  background: var(--color-pu-50); color: var(--color-in-600); font-size: 0.8rem; line-height: 1.35;
+  box-shadow: 0 14px 30px -12px var(--win-shadow);
+}
+.aviso strong { display: block; font-family: var(--font-mono); font-size: 0.68rem; color: var(--color-pu-500); font-weight: 600; }
+
+/* Maqueta de terminal (API y base de datos). --base la hace esperar a que la ventana termine de entrar */
+.terminal { --base: 1.35s; display: grid; align-content: start; gap: 0.1rem; font-family: var(--font-mono); font-size: clamp(0.72rem, 1.3vw, 0.84rem); line-height: 1.75; color: var(--color-in-50); }
+.terminal p { margin: 0; white-space: pre; }
+.t-prompt { color: var(--color-pu-200); }
+/* El efecto de máquina de escribir: steps(--n) destapa una letra por paso, con --n igual al largo del texto */
+.tecleado { display: inline-block; vertical-align: bottom; animation: teclear var(--dur, 1s) steps(var(--n)) both; animation-delay: var(--d, 0.25s); }
+.cursor { display: inline-block; width: 0.55em; height: 1.1em; margin-left: 3px; vertical-align: -0.2em; background: var(--color-bl-200); animation: parpadear 1s steps(1) infinite; }
+/* Colores de la terminal: ok, apagado, llaves, textos y números */
+.t-ok { color: var(--color-bl-200); }
+.t-dim { color: var(--color-in-200); }
+.t-k { color: var(--color-bl-100); }
+.t-s { color: var(--color-pu-200); }
+.t-n { color: var(--color-in-200); }
+.t-tabla { margin-top: 0.6rem; display: grid; max-width: 360px; border: 1px solid var(--hair); border-radius: 8px; overflow: hidden; }
+.t-fila { display: grid; grid-template-columns: minmax(0, 1fr) 4.5rem; gap: 1rem; padding: 0.3rem 0.8rem; border-top: 1px solid var(--hair); }
+.t-fila.t-cabecera { border-top: 0; color: var(--color-in-200); background: var(--dark-surface); }
+.bajo { justify-self: start; padding: 0 0.45rem; border-radius: 4px; background: var(--color-pu-500); color: #fff; }
+
+/* La lista de "qué incluye", con un chulito azul dibujado en SVG (sin pedir imágenes aparte) */
+.chequeos { display: grid; gap: 0.4rem; list-style: none; margin: 0; padding: 0; }
+.chequeos li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--fg); }
+.chequeos li::before {
+  content: ''; flex: none; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--color-bl-300) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 8.5 2.5 2.5L12 5.5'/%3E%3C/svg%3E") center / 11px no-repeat;
+}
+/* La flechita del botón del repo se escapa pa' la esquina, como diciendo "esto abre afuera" */
+.boton-repo .ext { transition: translate 0.2s ease; }
+.boton-repo:hover .ext { translate: 2px -2px; }
+
+/* El tecleo de la terminal, la rayita que se llena, el brinquito del ícono y la nube del fondo.
+   Ojo con llenar: Servicios.tsx la busca por nombre pa' saber cuándo pasar al siguiente servicio */
+@keyframes teclear { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes llenar { to { transform: scaleX(1); } }
+@keyframes empujon { 0% { transform: scale(0.8) rotate(-8deg); } 60% { transform: scale(1.12) rotate(3deg); } 100% { transform: none; } }
+@keyframes deriva { to { translate: -35% 30%; } }
+
+/* Movimiento reducido: la maqueta sale completa de una, sin tecleo ni escalera, y el acordeón abre sin deslizar */
+@media (prefers-reduced-motion: reduce) {
+  .entra, .tecleado, .cursor, .seccion-servicios::before, .servicio.activo .servicio-icono svg { animation: none; }
+  .servicio-mas, .servicio.activo .servicio-mas { transition: none; }
+}

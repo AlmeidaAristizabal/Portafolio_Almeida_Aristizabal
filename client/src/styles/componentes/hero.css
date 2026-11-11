@@ -1,0 +1,180 @@
+/* Hero: la portada morada con la órbita de tecnologías y el núcleo que explota */
+
+/* Sin @property, el navegador no sabe que estas variables son colores y las cambia de golpe.
+   Con esto el paso de morado a azul se ve suavecito, como debe ser */
+@property --h-chip-a { syntax: '<color>'; inherits: true; initial-value: #f2efff; }
+@property --h-chip-b { syntax: '<color>'; inherits: true; initial-value: #c7c8ff; }
+@property --h-chip-c { syntax: '<color>'; inherits: true; initial-value: #9a9cff; }
+@property --h-chip-ink { syntax: '<color>'; inherits: true; initial-value: #00076b; }
+@property --h-glow { syntax: '<color>'; inherits: true; initial-value: rgb(183 158 255 / 0.55); }
+@property --h-ring { syntax: '<color>'; inherits: true; initial-value: rgb(199 200 255 / 0.34); }
+@property --h-core-a { syntax: '<color>'; inherits: true; initial-value: #986bff; }
+@property --h-core-b { syntax: '<color>'; inherits: true; initial-value: #5600b8; }
+@property --h-halo { syntax: '<color>'; inherits: true; initial-value: rgb(86 0 184 / 0.55); }
+@property --h-name { syntax: '<color>'; inherits: true; initial-value: #c7c8ff; }
+
+.hero {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(42% 60% at 76% 45%, var(--pu-400-a) 0%, transparent 70%),
+    radial-gradient(45% 55% at 92% 92%, var(--in-500-a) 0%, transparent 70%),
+    linear-gradient(160deg, var(--color-pu-500), var(--color-pu-600) 55%, var(--color-in-600));
+  --h-chip-a: var(--color-pu-50); --h-chip-b: var(--color-in-100); --h-chip-c: var(--color-in-200);
+  --h-chip-ink: var(--color-in-600); --h-glow: var(--glow); --h-ring: var(--dark-line);
+  --h-core-a: var(--color-pu-300); --h-core-b: var(--color-pu-500); --h-halo: var(--halo); --h-name: var(--color-in-100);
+  transition: --h-chip-a 0.7s, --h-chip-b 0.7s, --h-chip-c 0.7s, --h-chip-ink 0.7s, --h-glow 0.7s, --h-ring 0.7s,
+    --h-core-a 0.7s, --h-core-b 0.7s, --h-halo 0.7s, --h-name 0.7s;
+}
+/* Después de la explosión todo se pinta de azul: solo cambiamos las variables y lo demás va solito */
+.hero.tema-azul {
+  --h-chip-a: var(--color-bl-50); --h-chip-b: var(--color-bl-100); --h-chip-c: var(--color-bl-200);
+  --h-chip-ink: var(--color-bl-600); --h-glow: var(--glow-b); --h-ring: var(--ring-b);
+  --h-core-a: var(--color-bl-200); --h-core-b: var(--color-bl-400); --h-halo: var(--halo-b); --h-name: var(--color-bl-100);
+}
+/* Un degradado no se puede animar, así que el azul vive en una capa encima y se prende con opacity */
+.hero::before {
+  content: ''; position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.8s ease;
+  background:
+    radial-gradient(42% 60% at 76% 45%, var(--bl-300-a) 0%, transparent 70%),
+    radial-gradient(45% 55% at 92% 92%, var(--in-500-a) 0%, transparent 70%),
+    linear-gradient(160deg, var(--color-bl-500), var(--color-in-600) 55%, var(--color-bl-600));
+}
+.hero.tema-azul::before { opacity: 1; }
+.hero > .envoltura, .hero > .cinta { position: relative; z-index: 1; }
+.hero .nombres { color: var(--h-name); }
+.hero .boton { transition: background-color 0.7s ease, color 0.7s ease, border-color 0.7s ease, box-shadow 0.2s ease; }
+.hero.tema-azul .boton-primario { background: var(--color-bl-100); color: var(--color-bl-600); }
+.hero.tema-azul .boton-primario:hover { background: var(--color-bl-50); box-shadow: 0 0 26px var(--glow-b); }
+.hero.tema-azul .boton-fantasma { border-color: var(--ring-b); }
+.hero.tema-azul .boton-fantasma:hover { border-color: var(--color-bl-200); }
+
+/* El letrerito que dice en qué anda la órbita, con su puntico que titila */
+.estado-orbita {
+  margin: 0; display: flex; align-items: center; gap: 0.6rem; min-height: 1.4em;
+  font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--h-chip-b);
+}
+.estado-orbita .punto {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--h-chip-c); box-shadow: 0 0 10px var(--h-chip-c);
+  animation: parpadear 1.6s ease-in-out infinite;
+}
+.estado-orbita .txt { transition: opacity 0.18s ease; }
+.estado-orbita.cambiando .txt { opacity: 0; }
+
+/* La explosión: lienzo, destello, burbujas voladoras y anillos. Todo encima y sin robarse los clics */
+.capa-fx { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+.lienzo-fx { position: absolute; inset: 0; width: 100%; height: 100%; }
+.destello-fx {
+  position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(circle at var(--fx, 75%) var(--fy, 45%), #fff 0, var(--h-chip-a) 16%, transparent 62%);
+}
+.volador {
+  position: absolute; border-radius: 50%; display: grid; place-items: center; will-change: transform;
+  font-family: var(--font-titulo); font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--h-chip-ink);
+  background: radial-gradient(circle at 35% 30%, var(--h-chip-a) 0%, var(--h-chip-b) 48%, var(--h-chip-c) 100%);
+  box-shadow: 0 0 0 3px var(--dark-hair), 0 0 22px 6px var(--h-glow);
+}
+.anillo-fx, .remolino-fx { position: absolute; border-radius: 50%; pointer-events: none; }
+.anillo-fx { border: 2px solid var(--h-chip-b); box-shadow: 0 0 18px var(--h-glow), inset 0 0 18px var(--h-glow); }
+.remolino-fx { border: 2px dashed var(--h-chip-c); box-shadow: 0 0 14px var(--h-glow); }
+.remolino-fx::after { content: ''; position: absolute; inset: 22%; border-radius: 50%; border: 2px solid var(--h-chip-b); }
+
+/* La órbita mide todo en cqw (porcentaje del ancho de la órbita), así se encoge entera en el celular sin descuadrarse */
+.orbita {
+  position: relative; margin: 0 auto; width: min(100%, 470px); aspect-ratio: 1; max-width: 100%;
+  container-type: inline-size;
+}
+.anillo { position: absolute; border: 1px solid var(--h-ring); border-radius: 50%; transition: box-shadow 2s ease-in; }
+.anillo-externo { inset: 7cqw; }
+.anillo-interno { inset: 21.5cqw; }
+.nucleo {
+  position: absolute; inset: 37cqw; border-radius: 50%; display: grid; place-items: center; color: #fff;
+  background: radial-gradient(circle at 40% 35%, var(--h-core-a), var(--h-core-b) 72%);
+  box-shadow: 0 0 0 2.4cqw var(--h-halo), 0 0 9cqw var(--h-glow);
+  transition: scale 0.45s cubic-bezier(0.3, 1.6, 0.5, 1), box-shadow 2.5s ease-in;
+}
+button.nucleo { cursor: pointer; border: 0; padding: 0; }
+.nucleo .logo-aj { width: 30%; transition: scale 0.3s ease; }
+.nucleo:hover .logo-aj { scale: 1.06; }
+/* Las pistas tapan la órbita entera como una sábana: dejan pasar el clic al núcleo y solo las burbujas lo atrapan */
+.pista {
+  position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none;
+  animation: girar var(--dur) linear infinite; animation-direction: var(--dir);
+}
+.pista .nodo { pointer-events: auto; }
+.pista-externa { --r: 43cqw; --dur: 90s; --dir: normal; --cdir: reverse; }
+.pista-interna { --r: 28.5cqw; --dur: 70s; --dir: reverse; --cdir: normal; }
+/* Cada burbuja se para en el centro, gira su ángulo (--a), camina el radio (--r) y se endereza */
+.nodo {
+  --s: max(12cqw, 44px);
+  position: absolute; left: 50%; top: 50%; width: var(--s); height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(var(--a) * -1));
+}
+.burbuja {
+  width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; cursor: default;
+  background: radial-gradient(circle at 35% 30%, var(--h-chip-a) 0%, var(--h-chip-b) 48%, var(--h-chip-c) 100%);
+  box-shadow: 0 0 0 3px var(--dark-hair), 0 0 18px 4px var(--h-glow);
+  font-family: var(--font-titulo); font-weight: 700; font-size: max(3.4cqw, 13px);
+  letter-spacing: 0.03em; text-transform: uppercase; color: var(--h-chip-ink);
+  /* Gira al revés de su pista pa' que el texto no quede patas arriba */
+  animation: girar var(--dur) linear infinite; animation-direction: var(--cdir);
+  transition: scale 0.25s ease, box-shadow 0.25s ease;
+}
+.burbuja:hover { scale: 1.12; box-shadow: 0 0 0 3px var(--h-chip-a), 0 0 28px 8px var(--h-glow); }
+/* Si el mouse se mete, la órbita se queda quieta pa' que puedan leer con calma */
+.orbita:hover .pista, .orbita:hover .burbuja { animation-play-state: paused; }
+
+/* Las fases de la explosión: cargando → explotando → regresando. Las clases las pone
+   src/efectos/explosionHero.ts; aquí solo decimos cómo se ve cada momento */
+.orbita.cargando .nucleo { animation: cargar var(--carga, 4.4s) ease-in forwards; box-shadow: 0 0 0 3.4cqw var(--h-halo), 0 0 18cqw var(--h-glow); }
+.orbita.cargando .anillo { box-shadow: 0 0 18px var(--h-glow), inset 0 0 18px var(--h-glow); }
+.orbita.explotando .nucleo { scale: 0.32; }
+.orbita.explotando .nodo { opacity: 0; }
+.orbita.explotando .anillo { animation: titilar 0.25s steps(2) 3; }
+.orbita.regresando .nodo { animation: nodoEntra 0.75s cubic-bezier(0.2, 1.4, 0.4, 1) both; animation-delay: calc(var(--k, 0) * 70ms); }
+.rol.glitch { animation: glitch 0.45s steps(6) both; }
+/* El núcleo se infla y al final tiembla como olla de presión antes de reventar */
+@keyframes cargar {
+  0% { scale: 1; translate: 0 0; } 78% { scale: 1.1; translate: 0 0; } 84% { translate: 2px -1px; }
+  88% { translate: -2px 1px; } 92% { translate: 2px 1px; } 96% { translate: -1px -2px; } 100% { scale: 1.18; translate: 0 0; }
+}
+@keyframes nodoEntra { from { scale: 0; opacity: 0; } 65% { scale: 1.08; opacity: 1; } to { scale: 1; opacity: 1; } }
+@keyframes titilar { 50% { opacity: 0.2; } }
+/* El rol hace cortocircuito: se parte en pedazos y se le corren los colores */
+@keyframes glitch {
+  0% { translate: 0 0; text-shadow: none; clip-path: none; }
+  20% { translate: -3px 0; text-shadow: 3px 0 var(--h-chip-c), -3px 0 var(--color-pu-400); clip-path: inset(0 0 55% 0); }
+  40% { translate: 3px 0; text-shadow: -3px 0 var(--h-chip-c), 3px 0 var(--color-bl-300); clip-path: inset(45% 0 0 0); }
+  60% { translate: -2px 0; text-shadow: 2px 0 var(--h-chip-c); clip-path: inset(20% 0 30% 0); }
+  80% { translate: 1px 0; text-shadow: none; clip-path: none; }
+  100% { translate: 0 0; text-shadow: none; clip-path: none; }
+}
+
+/* La cinta de tecnologías al pie del hero. La lista va dos veces seguidas y se corre la mitad (-50%):
+   cuando la primera se acaba, la segunda ya está en su puesto y nadie nota el empate */
+.cinta {
+  position: relative; overflow: hidden; background: var(--dark-surface); border-top: 1px solid var(--dark-hair);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.cinta-pista { display: flex; width: max-content; animation: desfilar 48s linear infinite; }
+.cinta:hover .cinta-pista { animation-play-state: paused; }
+.cinta-lista { display: flex; align-items: center; list-style: none; margin: 0; padding: 1.15rem 0; }
+.cinta-lista li {
+  display: flex; align-items: center; gap: 1.75rem; padding-right: 1.75rem;
+  font-size: 1.15rem; letter-spacing: 0.02em; white-space: nowrap; color: #fff;
+}
+.cinta-lista li::before { content: ''; width: 6px; height: 6px; background: var(--h-chip-c); transform: rotate(45deg); }
+
+/* Las vueltas de la órbita y el desfile de la cinta */
+@keyframes girar { to { transform: rotate(360deg); } }
+@keyframes desfilar { to { transform: translateX(-50%); } }
+
+/* Pa' quien pidió menos movimiento en su sistema: la órbita quieta y la cinta se vuelve una lista normalita */
+@media (prefers-reduced-motion: reduce) {
+  .pista, .burbuja, .cinta-pista, .estado-orbita .punto { animation: none; }
+  .cinta-pista { width: auto; flex-wrap: wrap; justify-content: center; }
+  .cinta-lista { flex-wrap: wrap; justify-content: center; }
+  .cinta-lista[aria-hidden='true'] { display: none; }
+  .cinta { -webkit-mask-image: none; mask-image: none; }
+}
