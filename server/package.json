@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "node dist/server.js"
   },
-  "author": "Alejandra Aristizabal y Juan Pablo Almeida",
+  "author": "Eleira Aristizabal y Juan Pablo Almeida",
   "license": "ISC",
   "type": "module",
   "dependencies": {

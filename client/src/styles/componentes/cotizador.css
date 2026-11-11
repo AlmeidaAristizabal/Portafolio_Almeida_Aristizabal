@@ -1,0 +1,20 @@
+/* Cotizador: las opciones de proyecto y la tarjeta morada del resumen */
+.opcion-cotizador { transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease; }
+.opcion-cotizador:hover { border-color: var(--color-pu-300); }
+/* El radio de verdad está escondido; este circulito dibujado es el que se ve y se rellena al marcar */
+.opcion-cotizador::after {
+  content: ''; position: absolute; top: 1rem; right: 1rem; width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid var(--radio-bd); background: var(--superficie); transition: border-color 0.2s ease, background 0.2s ease;
+}
+.opcion-cotizador.marcada { border-color: var(--color-pu-500); background: var(--marcada-bg); box-shadow: 0 0 0 3px var(--marcada-anillo); }
+.opcion-cotizador.marcada::after { border-color: var(--color-pu-500); background: radial-gradient(circle, var(--color-pu-500) 0 42%, var(--superficie) 48%); }
+/* Como el input está escondido, el borde de foco se lo ponemos a la tarjeta entera pa' que el teclado no ande a ciegas */
+.opcion-cotizador:has(input:focus-visible) { outline: 2px solid var(--color-bl-300); outline-offset: 3px; }
+.resumen-cotizador {
+  background:
+    radial-gradient(70% 55% at 90% 0%, var(--pu-400-a), transparent 70%),
+    linear-gradient(165deg, var(--color-pu-500), var(--color-pu-600) 55%, var(--color-in-600));
+  box-shadow: 0 30px 60px -28px var(--card-shadow);
+}
+.selector-moneda button { transition: background-color 0.2s ease, color 0.2s ease; }
+.selector-moneda button[aria-pressed='true'] { background: var(--color-pu-100); color: var(--color-in-600); }

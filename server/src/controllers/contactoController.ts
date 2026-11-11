@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { esquemaMensajeContacto } from '../models/MensajeContacto.js';
+import { guardarContacto } from '../services/contactoRepositorio.js';
 import { enviarCorreoContacto } from '../services/correoService.js';
 
 const RESPUESTA_EXITO = { ok: true, mensaje: '¡Listo! Te respondemos pronto.' };
@@ -23,9 +24,17 @@ export async function recibirContacto(req: Request, res: Response, next: NextFun
   }
 
   try {
-    await enviarCorreoContacto(resultado.data);
-    return res.status(201).json(RESPUESTA_EXITO);
+    // Primero se guarda: si Gmail se pone bravo, el mensaje igual no se pierde
+    await guardarContacto(resultado.data);
   } catch (error) {
     return next(error);
   }
+
+  try {
+    await enviarCorreoContacto(resultado.data);
+  } catch (error) {
+    // El mensaje ya está en contactos.json: decirle "error" al usuario solo lo pone a mandarlo dos veces
+    console.error('[correo] El mensaje se guardó, pero el correo no salió:', error);
+  }
+  return res.status(201).json(RESPUESTA_EXITO);
 }

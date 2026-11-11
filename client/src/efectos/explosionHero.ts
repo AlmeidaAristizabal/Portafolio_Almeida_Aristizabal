@@ -1,5 +1,6 @@
-// Banner del hero (portado del HTML v9): el núcleo se carga → explota con rayos → los lenguajes
-// salen volando hacia los bordes → el tema cambia de morado a azul → los rayos los jalan de vuelta.
+// El show del hero, en cinco actos: el núcleo se carga → explota con rayos → los lenguajes salen
+// volando pa' los bordes → todo se pinta de azul → los rayos los jalan otra vez a su puesto.
+// Aquí solo se ponen y se quitan clases; cómo se ve cada fase está en styles/componentes/hero.css.
 
 export interface ElementosHero {
   hero: HTMLElement;
@@ -77,8 +78,7 @@ export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => voi
   }
   const tf = (x: number, y: number, s: number, r: number) => `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`;
 
-  // ---------- Rayos en canvas ----------
-  // Parte la línea en pedacitos y los mueve al azar: así sale el zigzag del rayo
+  // Los rayos se pintan en canvas. Este parte una línea recta en pedacitos y los mueve al azar: así sale el zigzag
   function zigzag(p1: Punto, p2: Punto, aspereza: number): Punto[] {
     let pts = [p1, p2];
     let desv = Math.hypot(p2.x - p1.x, p2.y - p1.y) * aspereza;
@@ -136,7 +136,7 @@ export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => voi
   const fijo = (p: Punto) => () => p;
   const seguir = (e: Element) => () => rel(e.getBoundingClientRect());
 
-  // ---------- Piezas DOM de la explosión ----------
+  // Lo que no es rayo (anillos, remolino, burbujas voladoras) son divs de verdad, que se crean y se botan al terminar
   function anilloExpansivo(x: number, y: number, tam: number, escala: number, dur: number) {
     const d = document.createElement('div');
     d.className = 'anillo-fx';
@@ -195,7 +195,8 @@ export function iniciarExplosionHero(el: ElementosHero, onCambiarTema: () => voi
     return out;
   }
 
-  // ---------- Fases ----------
+  // De aquí pa' abajo, los actos del show en orden: cargar, explotar, cambiarTema y jalarDeVuelta.
+  // rearmar deja todo listo pa' la próxima y programar decide cuándo es esa próxima
   function cargar(dur: number) {
     fase = 'carga';
     orbita.style.setProperty('--carga', `${dur}ms`);

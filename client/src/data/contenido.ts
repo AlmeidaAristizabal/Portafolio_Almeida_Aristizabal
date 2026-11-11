@@ -8,8 +8,7 @@ export const ENLACES_NAV: { id: string; texto: Bilingue }[] = [
   { id: 'cotizador', texto: { es: 'Cotizar', en: 'Estimate' } },
 ];
 
-// ⚠️ Datos de contacto y enlaces de relleno (así vienen en el v9): cámbienlos por los reales
-export const CORREO_CONTACTO = 'hola@tudominio.dev';
+// ⚠️ Enlaces de relleno: apuntan a la portada de GitHub y LinkedIn, no a sus perfiles. Cámbienlos por los reales
 export const ENLACE_GITHUB = 'https://github.com/';
 export const ENLACE_LINKEDIN = 'https://www.linkedin.com/';
 // Cuando tengan los PDF, pongan la ruta aquí (ej. '/cv/cv-juan-pablo.pdf') y el botón empieza a descargar
@@ -41,7 +40,7 @@ export const PERSONAS = [
     tecnologias: ['Java', 'PHP', 'Laravel', 'MySQL', 'Python'],
   },
   {
-    nombre: 'Eleira Alejandra Aristizabal',
+    nombre: 'Eleira Aristizabal',
     rol: { es: 'full stack · enfoque frontend y móvil', en: 'full stack · frontend & mobile focus' },
     tecnologias: ['JavaScript', 'Dart', 'Flutter', 'C#', 'SQL'],
   },
@@ -147,7 +146,7 @@ export const NOMBRE_CATEGORIA: Record<CategoriaProyecto, Bilingue> = {
   app: { es: 'App', en: 'App' },
 };
 
-// Proyectos de ejemplo del v9. Cámbienlos por los reales cuando los tengan.
+// Proyectos concepto (no son clientes reales, por eso la tarjeta dice "concepto"). Cámbienlos cuando haya reales.
 export const PROYECTOS: Proyecto[] = [
   {
     id: 1,

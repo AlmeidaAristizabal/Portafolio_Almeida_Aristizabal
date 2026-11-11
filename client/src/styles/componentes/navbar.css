@@ -1,0 +1,28 @@
+/* Navbar: la barra de arriba, con vidrio esmerilado pa' que se vea el contenido pasar por debajo */
+.encabezado-sitio {
+  background: var(--header-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--dark-hair); transition: background-color 0.7s ease, border-color 0.7s ease;
+}
+/* Los 0.7 s son los mismos del hero: cuando él se pone azul, la barra cambia al mismo ritmo */
+.encabezado-sitio .marca-circulo, .encabezado-sitio .enlace-nav, .encabezado-sitio .boton-primario {
+  transition: background-color 0.7s ease, color 0.7s ease, box-shadow 0.7s ease;
+}
+/* Tema azul: lo prende la explosión del hero y la barra se viste del mismo color */
+.encabezado-sitio.tema-azul { --header-bg: var(--header-bg-b); border-bottom-color: var(--ring-b); }
+.encabezado-sitio.tema-azul .enlace-nav { color: var(--color-bl-100); }
+.encabezado-sitio.tema-azul .enlace-nav:hover { color: #fff; }
+.encabezado-sitio.tema-azul .marca-circulo {
+  background: radial-gradient(circle at 35% 30%, var(--color-bl-50), var(--color-bl-100) 50%, var(--color-bl-200));
+  color: var(--color-bl-600); box-shadow: 0 0 14px var(--glow-b);
+}
+.encabezado-sitio.tema-azul .boton-primario { background: var(--color-bl-100); color: var(--color-bl-600); }
+.encabezado-sitio.tema-azul .boton-primario:hover { background: var(--color-bl-50); box-shadow: 0 0 26px var(--glow-b); }
+.encabezado-sitio.tema-azul .menu-movil { background: var(--color-bl-600); }
+
+/* La bolita del logo, con brillito y todo */
+.marca-circulo {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 35% 30%, var(--color-pu-50), var(--color-in-100) 50%, var(--color-in-200));
+  color: var(--color-in-600); box-shadow: 0 0 14px var(--glow);
+}
+.marca-circulo .logo-aj { width: 16px; }

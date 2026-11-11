@@ -57,7 +57,7 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                   return (
                     <label
                       key={opcion.id}
-                      className={`opcion-cotizador relative grid min-w-0 cursor-pointer content-start gap-1 rounded-[14px] border-[1.5px] border-(--line) bg-(--superficie) py-4 pr-11 pl-4 ${marcada ? 'marcada' : ''}`}
+                      className={`opcion-cotizador relative grid min-w-0 cursor-pointer content-start gap-1.5 rounded-[14px] border-[1.5px] border-(--line) bg-(--superficie) py-6 pr-12 pl-5 ${marcada ? 'marcada' : ''}`}
                     >
                       <input
                         type="radio"
@@ -67,9 +67,9 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                         onChange={() => setTipoId(opcion.id)}
                         className="absolute inset-0 m-0 size-full cursor-pointer opacity-0"
                       />
-                      <b className="text-base leading-snug font-bold text-(--heading)">{opcion.nombre[idioma]}</b>
-                      <small className="text-[0.88rem] leading-snug text-(--fg-muted)">{opcion.descripcion[idioma]}</small>
-                      <em className="mt-1 font-mono text-[0.72rem] text-(--eyebrow) not-italic">{t.cotizador.desde(dinero(desdeUsd(opcion), true))}</em>
+                      <b className="text-lg leading-snug font-bold text-(--heading)">{opcion.nombre[idioma]}</b>
+                      <small className="text-base leading-snug text-(--fg-muted)">{opcion.descripcion[idioma]}</small>
+                      <em className="mt-1.5 font-mono text-xs text-(--eyebrow) not-italic">{t.cotizador.desde(dinero(desdeUsd(opcion), true))}</em>
                     </label>
                   );
                 })}
@@ -119,9 +119,6 @@ export function Cotizador({ onEnviar }: { onEnviar: (cotizacion: CotizacionElegi
                   {t.cotizador.reiniciar}
                 </button>
               </div>
-              <p className="m-0 text-[0.82rem] leading-normal text-in-100">
-                {t.cotizador.aviso}
-              </p>
               {moneda === 'COP' && (
                 <p className="m-0 font-mono text-[0.72rem] text-in-200">
                   {t.cotizador.trm(COP_POR_USD.toLocaleString(LOCALE[idioma]), FECHA_TASA[idioma])}

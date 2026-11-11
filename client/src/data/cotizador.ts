@@ -1,7 +1,7 @@
 import type { Bilingue } from '../i18n/textos';
 import type { DatosContacto } from '../schemas/contacto';
 
-// ⚠️ Valores de referencia del v9: ajústenlos a su tarifa real
+// ⚠️ Tarifa y dólar de referencia. Ajústenlos a lo que cobran de verdad, y si cambian la TRM, cambien también la fecha
 export const TARIFA_USD_HORA: [number, number] = [35, 45];
 export const COP_POR_USD = 3210;
 export const FECHA_TASA: Bilingue = { es: '6 oct. 2026', en: 'Oct 6, 2026' };

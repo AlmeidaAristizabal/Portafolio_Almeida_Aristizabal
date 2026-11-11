@@ -1,6 +1,6 @@
-// Avioneta con pancarta (portada del HTML v9): rueda sobre el botón "Enviar" de borde a borde y despega,
-// da una vuelta, cruza el formulario, pasa por DETRÁS de las fotos, sale por la izquierda y cruza la
-// pantalla de borde a borde arrastrando la pancarta "¡ENVIADO!".
+// La avioneta del "¡ENVIADO!". El vuelo completo: carretea encima del botón "Enviar", despega,
+// da una vuelta, cruza el formulario, se esconde DETRÁS de las fotos, sale por la izquierda y
+// atraviesa la pantalla entera arrastrando su pancarta. Todo pintado a mano en canvas, sin librerías.
 
 interface Punto { x: number; y: number }
 interface Caja { l: number; t: number; r: number; b: number; w: number; h: number }
@@ -41,7 +41,8 @@ export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void, pan
     oscuro: v('--color-in-600'), helice: v('--color-pu-200'), borde: v('--color-pu-200'), texto: v('--color-pu-500'), brillo: v('--color-pu-200'),
   };
 
-  // Lienzos: uno detrás del contenido y otro al frente
+  // Dos lienzos, uno detrás del contenido y otro al frente: así la avioneta puede pasar por la espalda de las fotos.
+  // El dpr se topa en 2 porque una pantalla 3x no se ve más bonita, solo más pesada
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const fondo = document.createElement('canvas');
   fondo.className = 'avioneta-fondo'; fondo.setAttribute('aria-hidden', 'true');
@@ -65,7 +66,7 @@ export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void, pan
     c.setTransform(dpr, 0, 0, dpr, -ox * dpr, -oy * dpr);
   }
 
-  // Pancarta
+  // La pancarta se mide letra por letra, porque cada una va a ondear en su propio pedazo de tela
   const fuente = `700 ${Math.round(22 * k)}px ${v('--font-titulo')}`;
   fctx.font = fuente;
   const letras = Array.from(pancarta).map((ch) => ({ ch, w: fctx.measureText(ch).width, en: 0 }));
@@ -174,7 +175,7 @@ export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void, pan
     return Math.min(S, a.d + (b.d - a.d) * f);
   }
 
-  // Dibujo de la avioneta (vista lateral, mirando a la derecha)
+  // La avioneta vista de lado, con la trompa pa' la derecha. Los números son el dibujo, no los toquen sin papel y lápiz
   const cuerpo = new Path2D('M27 1 Q26 -6 17 -7 L-8 -6.5 Q-21 -5 -30 -2.5 L-30 2 Q-20 5.5 -6 6.5 L17 6.5 Q26 6.5 27 1 Z');
   const aleta = new Path2D('M-21 -4.5 L-29 -15 Q-32 -17 -34 -14 L-31 -2 Z');
   const cabina = new Path2D('M5 -6.6 Q8 -12.5 15 -12.5 Q20 -12 22 -6.8 Z');
@@ -241,7 +242,7 @@ export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void, pan
       if (q.atras !== pr.atras) { vaciar(); tramo = [q]; }
     }
     vaciar();
-    // Asta delantera
+    // El palito de adelante que sostiene la pancarta, en el lienzo que toque según dónde vaya
     const pc = f0.atras ? bctx : fctx;
     pc.strokeStyle = COL.texto; pc.lineWidth = 3 * k;
     pc.beginPath();
@@ -281,14 +282,14 @@ export function volarAvioneta(el: ElementosAvioneta, alTerminar: () => void, pan
     if (Math.abs(sy) < 0.05) sy = sy < 0 ? -0.05 : 0.05;
     const cola = { x: p.x - tg.x * 33 * k, y: p.y - tg.y * 33 * k };
 
-    // Pista punteada sobre el botón
+    // La pista punteada encima del botón: corre mientras carretea y se desvanece cuando ya va en el aire
     const pista = 1 - suave((s - Lr) / 160);
     if (pista > 0) {
       fctx.save(); fctx.globalAlpha = pista * 0.9; fctx.strokeStyle = COL.blanco; fctx.lineWidth = 2; fctx.setLineDash([8, 6]);
       fctx.lineDashOffset = -s * 0.6;
       fctx.beginPath(); fctx.moveTo(Bt.l + 14, Bt.t - 1); fctx.lineTo(Bt.r - 14, Bt.t - 1); fctx.stroke(); fctx.restore();
     }
-    // Humo del motor
+    // Humito del motor, pero no en cada cuadro (el 70 %): si sale parejito parece una tubería
     if (!terminado && s > Lr * 0.5 && Math.random() < 0.7) {
       humos.push({ x: cola.x, y: cola.y, r: 2 * k, vx: -tg.x * 0.4 + (Math.random() - 0.5) * 0.4, vy: -tg.y * 0.4 + (Math.random() - 0.5) * 0.4, vida: 1, atras: estaAtras });
     }

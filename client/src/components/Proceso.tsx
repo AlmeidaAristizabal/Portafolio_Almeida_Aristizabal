@@ -14,9 +14,10 @@ export function Proceso() {
             <p className="intro-seccion">{t.proceso.intro}</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-[clamp(2.5rem,5vw,5rem)]">
+          {/* Mitad y mitad: el camión termina en el mismo borde que el resumen del cotizador de abajo */}
+          <div className="grid grid-cols-1 items-center gap-[clamp(2.5rem,5vw,4rem)] lg:grid-cols-2">
             {/* Cada etapa es un commit; el último es el que está en producción (HEAD → main) */}
-            <ol className="m-0 min-w-0 flex-[1_1_440px] list-none p-0">
+            <ol className="m-0 min-w-0 list-none p-0">
               {ETAPAS_PROCESO.map((etapa, i) => {
                 const esUltima = i === ETAPAS_PROCESO.length - 1;
                 return (
@@ -37,7 +38,7 @@ export function Proceso() {
               })}
             </ol>
 
-            <figure className="camion-fig m-0 min-w-0 flex-[1_1_460px]">
+            <figure className="camion-fig relative m-0 min-w-0">
               <CamionAJ etiqueta={t.proceso.camion} />
             </figure>
           </div>

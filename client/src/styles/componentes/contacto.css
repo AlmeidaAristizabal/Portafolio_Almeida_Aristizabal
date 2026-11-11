@@ -1,0 +1,47 @@
+/* Contacto: el formulario, las fotos y la avioneta que sale volando con el mensaje */
+.seccion-contacto {
+  background:
+    radial-gradient(40% 55% at 82% 82%, var(--pu-400-a), transparent 70%),
+    radial-gradient(45% 60% at 6% 8%, var(--in-500-a), transparent 72%),
+    var(--color-in-600);
+}
+/* Los chips de "¿qué necesitas?": son radios escondidos, y el span de al lado es el que se pinta */
+.chip-tipo span { transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+.chip-tipo:hover span { border-color: var(--color-in-100); background: var(--dark-surface); }
+.chip-tipo input:checked + span { background: var(--color-pu-500); border-color: var(--color-pu-300); color: #fff; box-shadow: 0 0 18px var(--glow); }
+.chip-tipo input:focus-visible + span { outline: 2px solid var(--color-bl-200); outline-offset: 2px; }
+/* Las cajas de texto. Con aria-invalid se ponen moradas pa' avisar que algo quedó mal escrito */
+.campo {
+  display: block; width: 100%; padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--field-bd);
+  background: transparent; color: var(--color-in-50); font: 400 1rem/1.4 var(--font-texto);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.campo::placeholder { color: var(--field-ph); }
+.campo:hover { border-color: var(--color-in-100); }
+.campo:focus { outline: none; border-color: var(--color-bl-300); background: var(--dark-surface); box-shadow: 0 0 0 1px var(--color-bl-300), 0 0 0 5px var(--focus-glow); }
+.campo[aria-invalid='true'] { border-color: var(--color-pu-200); box-shadow: 0 0 0 1px var(--color-pu-200); }
+textarea.campo { min-height: 7.5rem; resize: vertical; line-height: 1.5; }
+.estado-form { animation: brotar 0.45s ease both; }
+/* El botón de enviar: el avioncito se esconde (.volando) porque en ese momento va saliendo el de verdad */
+.boton-enviar { transition: background-color 0.2s ease, box-shadow 0.2s ease, scale 0.2s ease; }
+.boton-enviar svg { transition: opacity 0.2s ease, translate 0.25s ease; }
+.boton-enviar:hover { background: var(--color-pu-500); box-shadow: 0 0 24px var(--glow); }
+.boton-enviar:hover svg { translate: 3px -3px; }
+.boton-enviar:active { scale: 0.97; }
+.boton-enviar.volando svg { opacity: 0; }
+.boton-enviar:disabled { cursor: progress; }
+/* Las fotos vienen cortadas en el codo: desvanecemos ese lado pa' que no parezca que les mocharon el brazo */
+.foto-c-juan { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%); mask-image: linear-gradient(to right, transparent 0, #000 16%); }
+.foto-c-eleira { -webkit-mask-image: linear-gradient(to left, transparent 0, #000 14%); mask-image: linear-gradient(to left, transparent 0, #000 14%); }
+.personas-contacto::before { content: ''; position: absolute; left: 6%; right: 2%; bottom: 0; height: 75%; background: radial-gradient(closest-side, var(--glow), transparent); }
+
+/* La avioneta del "¡ENVIADO!" usa dos lienzos: uno detrás pa' pasar por la espalda de las fotos
+   y otro al frente pa' cruzar por encima. Así parece que de verdad le da la vuelta */
+.avioneta-frente { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.avioneta-lienzo { position: absolute; inset: 0; width: 100%; height: 100%; }
+.avioneta-fondo { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+/* Movimiento reducido: el aviso de enviado aparece sin brincar */
+@media (prefers-reduced-motion: reduce) {
+  .estado-form { animation: none; }
+}

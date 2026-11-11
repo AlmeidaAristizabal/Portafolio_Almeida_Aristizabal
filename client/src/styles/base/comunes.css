@@ -1,0 +1,39 @@
+/* Piezas que se repiten en casi todas las secciones: títulos, etiquetas, botones y el logo */
+
+/* Títulos de sección: la ceja chiquita de arriba, el título grandote y el párrafo de intro */
+.ceja { margin: 0 0 0.85rem; font-family: var(--font-mono); font-size: 0.84rem; color: var(--eyebrow); }
+.titulo-seccion {
+  margin: 0; font-family: var(--font-titulo); font-weight: 600; text-transform: uppercase;
+  font-size: clamp(2.6rem, 5.4vw, 4.2rem); line-height: 1; letter-spacing: 0.01em; color: var(--heading);
+  text-wrap: balance; overflow-wrap: break-word;
+}
+.intro-seccion { margin: 1rem 0 0; max-width: 60ch; color: var(--fg-muted); }
+.etiquetas { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; margin: 0; padding: 0; }
+.etiqueta {
+  font-family: var(--font-mono); font-size: 0.90rem; line-height: 1.4; padding: 0.25rem 0.6rem; border-radius: 6px;
+  background: var(--tag-bg); border: 1px solid var(--tag-bd); color: var(--tag-fg);
+}
+
+/* Botones */
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  font-family: var(--font-texto); font-weight: 600; font-size: 1rem; line-height: 1.2;
+  padding: 0.85rem 1.5rem; border-radius: 10px; border: 1px solid transparent; text-decoration: none; cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.boton-primario { background: var(--color-pu-100); color: var(--color-pu-600); }
+.boton-primario:hover { background: var(--color-pu-50); box-shadow: 0 0 26px var(--glow); }
+.boton-fantasma { background: transparent; color: var(--color-in-50); border-color: var(--dark-line); }
+.boton-fantasma:hover { background: var(--dark-surface-2); border-color: var(--color-pu-200); }
+.boton-sm { padding: 0.55rem 1.05rem; font-size: 0.95rem; }
+/* El verde del Figma es terco: así el hero se ponga azul, este sigue verde */
+.boton-verde { background: var(--color-verde); color: #fff; }
+.boton-verde:hover { background: #4fcb5d; box-shadow: 0 0 26px rgb(64 187 78 / 0.45); }
+
+/* Logo AJ: el PNG solo pone la forma (mask) y el color lo saca del texto de quien lo contenga.
+   Así un solo archivo sirve pa' blanco, morado, azul o el que se inventen mañana */
+.logo-aj {
+  display: block; aspect-ratio: 784 / 1106; background-color: currentColor;
+  -webkit-mask: url('../../assets/aj-monolinea-blanco.png') center / contain no-repeat;
+  mask: url('../../assets/aj-monolinea-blanco.png') center / contain no-repeat;
+}

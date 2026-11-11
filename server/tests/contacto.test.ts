@@ -1,11 +1,16 @@
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { crearApp } from '../src/app.js';
+import { guardarContacto } from '../src/services/contactoRepositorio.js';
 import { enviarCorreoContacto } from '../src/services/correoService.js';
 
 // Nadie quiere recibir 40 correos cada vez que corre las pruebas
 vi.mock('../src/services/correoService.js', () => ({
   enviarCorreoContacto: vi.fn().mockResolvedValue(undefined),
+}));
+// Ni llenar el contactos.json de verdad con mensajes de mentira
+vi.mock('../src/services/contactoRepositorio.js', () => ({
+  guardarContacto: vi.fn().mockResolvedValue(undefined),
 }));
 
 const mensajeValido = {
@@ -22,6 +27,27 @@ describe('POST /api/contacto', () => {
   beforeEach(() => {
     app = crearApp();
     vi.mocked(enviarCorreoContacto).mockClear();
+    vi.mocked(guardarContacto).mockClear();
+  });
+
+  it('guarda el mensaje antes de mandar el correo', async () => {
+    const respuesta = await request(app).post('/api/contacto').send(mensajeValido);
+
+    expect(respuesta.status).toBe(201);
+    expect(guardarContacto).toHaveBeenCalledWith(expect.objectContaining({ correo: mensajeValido.correo }));
+    const ordenGuardar = vi.mocked(guardarContacto).mock.invocationCallOrder[0];
+    const ordenCorreo = vi.mocked(enviarCorreoContacto).mock.invocationCallOrder[0];
+    expect(ordenGuardar).toBeLessThan(ordenCorreo);
+  });
+
+  it('si no se puede guardar, responde 500 y no manda el correo', async () => {
+    vi.mocked(guardarContacto).mockRejectedValueOnce(new Error('Disco lleno'));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const respuesta = await request(app).post('/api/contacto').send(mensajeValido);
+
+    expect(respuesta.status).toBe(500);
+    expect(enviarCorreoContacto).not.toHaveBeenCalled();
   });
 
   it('acepta un mensaje válido y manda el correo', async () => {
@@ -87,13 +113,15 @@ describe('POST /api/contacto', () => {
     expect(enviarCorreoContacto).not.toHaveBeenCalled();
   });
 
-  it('responde 500 sin tumbarse si el correo falla', async () => {
+  it('si el correo falla pero ya se guardó, responde éxito pa\' que no lo manden dos veces', async () => {
     vi.mocked(enviarCorreoContacto).mockRejectedValueOnce(new Error('SMTP caído'));
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const respuesta = await request(app).post('/api/contacto').send(mensajeValido);
 
-    expect(respuesta.status).toBe(500);
-    expect(respuesta.body.ok).toBe(false);
+    expect(respuesta.status).toBe(201);
+    expect(respuesta.body.ok).toBe(true);
+    expect(guardarContacto).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('el correo no salió'), expect.any(Error));
   });
 });

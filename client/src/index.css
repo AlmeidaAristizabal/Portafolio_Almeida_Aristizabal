@@ -1,8 +1,20 @@
 @import 'tailwindcss';
-/* En la capa "components" pa' que las utilidades de Tailwind (hidden, w-full…) le puedan ganar */
-@import './styles/efectos.css' layer(components);
+/* Todo va en la capa "components" pa' que las clases de Tailwind (hidden, w-full…) le puedan ganar.
+   Ojo con el orden: primero la base (colores, animaciones, piezas comunes) y después cada sección,
+   porque varias secciones le meten la mano a los botones y tienen que llegar de últimas */
+@import './styles/base/tema.css' layer(components);
+@import './styles/base/animaciones.css' layer(components);
+@import './styles/base/comunes.css' layer(components);
+@import './styles/componentes/navbar.css' layer(components);
+@import './styles/componentes/hero.css' layer(components);
+@import './styles/componentes/nosotros.css' layer(components);
+@import './styles/componentes/servicios.css' layer(components);
+@import './styles/componentes/proyectos.css' layer(components);
+@import './styles/componentes/proceso.css' layer(components);
+@import './styles/componentes/cotizador.css' layer(components);
+@import './styles/componentes/contacto.css' layer(components);
 
-/* Fuentes del Figma, paleta del Figma (tal cual la usa el HTML v9) */
+/* Las fuentes y la paleta, sacadas tal cual del Figma. Cada color crea sus clases solito (text-in-100, bg-pu-500…) */
 @theme {
   --font-titulo: 'Alumni Sans SC', 'Arial Narrow', sans-serif;
   --font-texto: 'Anaheim', system-ui, sans-serif;
@@ -44,7 +56,7 @@
   --color-verde: #40bb4e;
 }
 
-/* El mismo ancho que el .wrap del v9 */
+/* El contenedor de todas las secciones: nunca más ancho que 1180px y con aire a los lados que crece con la pantalla */
 @utility envoltura {
   max-width: 1180px;
   margin-inline: auto;
