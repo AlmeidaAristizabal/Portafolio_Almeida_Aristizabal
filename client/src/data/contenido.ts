@@ -146,7 +146,7 @@ export const NOMBRE_CATEGORIA: Record<CategoriaProyecto, Bilingue> = {
   app: { es: 'App', en: 'App' },
 };
 
-// Proyectos de ejemplo del v9. Cámbienlos por los reales cuando los tengan.
+// Proyectos concepto (no son clientes reales, por eso la tarjeta dice "concepto"). Cámbienlos cuando haya reales.
 export const PROYECTOS: Proyecto[] = [
   {
     id: 1,
