@@ -1,6 +1,6 @@
 # Portafolio_Almeida_Aristizabal
 
-Portafolio de AJ (Alejandra Aristizabal y Juan Pablo Almeida): quiénes somos, qué hacemos, los proyectos, un cotizador que da un rango de precio en 30 segundos y un formulario de contacto que guarda el mensaje y lo manda al correo.
+Portafolio de AJ (Eleira Aristizabal y Juan Pablo Almeida): quiénes somos, qué hacemos, los proyectos, un cotizador que da un rango de precio en 30 segundos y un formulario de contacto que guarda el mensaje y lo manda al correo.
 
 ## Stack
 

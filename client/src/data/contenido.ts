@@ -40,7 +40,7 @@ export const PERSONAS = [
     tecnologias: ['Java', 'PHP', 'Laravel', 'MySQL', 'Python'],
   },
   {
-    nombre: 'Eleira Alejandra Aristizabal',
+    nombre: 'Eleira Aristizabal',
     rol: { es: 'full stack · enfoque frontend y móvil', en: 'full stack · frontend & mobile focus' },
     tecnologias: ['JavaScript', 'Dart', 'Flutter', 'C#', 'SQL'],
   },
