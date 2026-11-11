@@ -67,7 +67,7 @@ export function Proyectos() {
 function TarjetaProyecto({ proyecto, modo }: { proyecto: Proyecto; modo: Modo }) {
   const { idioma, t } = useIdioma();
   return (
-    <article className="proyecto oscuro aparecer flex min-w-0 flex-col rounded-[18px] p-2.5" data-cat={proyecto.categoria}>
+    <article className="proyecto oscuro aparecer flex min-w-0 flex-col rounded-[18px] p-2.5">
       <div className="vidrio" aria-hidden>
         <MaquetaTarjeta tipo={proyecto.maqueta} />
       </div>

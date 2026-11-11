@@ -9,7 +9,6 @@ export const ENLACES_NAV: { id: string; texto: Bilingue }[] = [
 ];
 
 // ⚠️ Datos de contacto y enlaces de relleno (así vienen en el v9): cámbienlos por los reales
-export const CORREO_CONTACTO = 'hola@tudominio.dev';
 export const ENLACE_GITHUB = 'https://github.com/';
 export const ENLACE_LINKEDIN = 'https://www.linkedin.com/';
 // Cuando tengan los PDF, pongan la ruta aquí (ej. '/cv/cv-juan-pablo.pdf') y el botón empieza a descargar
