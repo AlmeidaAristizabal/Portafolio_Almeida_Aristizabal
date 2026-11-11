@@ -7,8 +7,8 @@ export const MAX_MOTIVO = 600;
 // Ojo: TipoContacto (data/cotizador.ts) sale de aquí, así que el enum de proyecto manda.
 // Los mensajes son claves: el texto en cada idioma está en i18n/textos.ts (errores)
 export const esquemaContacto = z.object({
-  // Escoger el tipo de proyecto ayuda, pero no es obligatorio (así está en el v9)
-  // (nullish porque un grupo de radios sin marcar llega como null)
+  // Escoger el tipo de proyecto ayuda, pero no lo exigimos: mejor un mensaje sin tipo que ningún mensaje.
+  // Es nullish porque un grupo de radios sin marcar llega como null
   proyecto: z.enum(['pagina-web', 'landing', 'app-movil', 'otro']).nullish(),
   nombre: z.string().trim().min(3, 'nombre').max(80),
   correo: z.email('correo').max(120),

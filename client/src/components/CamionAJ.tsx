@@ -1,5 +1,5 @@
-// El camión de AJ Express dibujado en SVG (del v9): llantas que giran, rebote, carretera, humo y luz.
-// Los colores van en style porque var() no funciona como atributo de SVG.
+// El camión de AJ Express, dibujado a mano en SVG. Las animaciones (llantas, rebote, humo) viven en proceso.css.
+// Los colores van en style y no en fill="…" porque el SVG no entiende var() como atributo: hay que dárselo masticado.
 const c = (color: string) => ({ fill: `var(--color-${color})` });
 
 function Llanta({ cx }: { cx: number }) {

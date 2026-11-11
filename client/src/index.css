@@ -14,7 +14,7 @@
 @import './styles/componentes/cotizador.css' layer(components);
 @import './styles/componentes/contacto.css' layer(components);
 
-/* Fuentes del Figma, paleta del Figma (tal cual la usa el HTML v9) */
+/* Las fuentes y la paleta, sacadas tal cual del Figma. Cada color crea sus clases solito (text-in-100, bg-pu-500…) */
 @theme {
   --font-titulo: 'Alumni Sans SC', 'Arial Narrow', sans-serif;
   --font-texto: 'Anaheim', system-ui, sans-serif;
@@ -56,7 +56,7 @@
   --color-verde: #40bb4e;
 }
 
-/* El mismo ancho que el .wrap del v9 */
+/* El contenedor de todas las secciones: nunca más ancho que 1180px y con aire a los lados que crece con la pantalla */
 @utility envoltura {
   max-width: 1180px;
   margin-inline: auto;
